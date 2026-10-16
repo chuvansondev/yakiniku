@@ -5,37 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Str;
 
 class Booking extends Model
 {
-    private static array $statusBeforeUpdate = [];
-
-    protected static function booted(): void
-    {
-        static::creating(function (Booking $booking): void {
-            $booking->booking_code = 'BK-'.Str::upper((string) Str::ulid());
-        });
-
-        static::updating(function (Booking $booking): void {
-            if ($booking->isDirty('status')) {
-                self::$statusBeforeUpdate[$booking->getKey()] = (string) $booking->getRawOriginal('status');
-            }
-        });
-
-        static::created(function (Booking $booking): void {
-            $booking->recordStatusChange(null, (string) $booking->status, true);
-        });
-
-        static::updated(function (Booking $booking): void {
-            $previousStatus = self::$statusBeforeUpdate[$booking->getKey()] ?? null;
-            if ($previousStatus !== null && $previousStatus !== (string) $booking->status) {
-                $booking->recordStatusChange($previousStatus, (string) $booking->status);
-            }
-            unset(self::$statusBeforeUpdate[$booking->getKey()]);
-        });
-    }
-
     protected $fillable = [
         'booking_code',
         'restaurant_id',
@@ -94,19 +66,4 @@ class Booking extends Model
         return $this->hasMany(BookingStatusHistory::class)->latest('changed_at')->latest('id');
     }
 
-    private function recordStatusChange(?string $from, string $to, bool $initial = false): void
-    {
-        $actor = auth()->user();
-        $isAdmin = $actor?->hasPermission('menu.bookings.manage') ?? false;
-
-        $this->statusHistory()->create([
-            'from_status' => $from,
-            'to_status' => $to,
-            'changed_by' => $actor?->id,
-            'changed_by_name' => $actor?->name ?? __('System'),
-            'source' => $initial && ! $actor ? 'public' : ($isAdmin ? 'admin' : ($actor ? 'customer' : 'system')),
-            'change_type' => $initial ? 'created' : 'status_change',
-            'changed_at' => now(),
-        ]);
-    }
 }

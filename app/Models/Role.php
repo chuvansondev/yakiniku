@@ -29,13 +29,6 @@ class Role extends Model
             ->withTimestamps();
     }
 
-    public function hasPermission(string $permission): bool
-    {
-        return $this->permissions()
-            ->where('permissions.slug', $permission)
-            ->exists();
-    }
-
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'create_by');
