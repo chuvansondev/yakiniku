@@ -6,7 +6,7 @@ use App\Filament\Resources\MenuItems\MenuItemResource;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ForceDeleteAction;
 use Filament\Actions\RestoreAction;
-use Filament\Resources\Pages\EditRecord;
+use App\Filament\Resources\Pages\EditRecord;
 
 class EditMenuItem extends EditRecord
 {

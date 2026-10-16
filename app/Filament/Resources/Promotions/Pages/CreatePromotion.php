@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\Promotions\Pages;
 
 use App\Filament\Resources\Promotions\PromotionResource;
-use Filament\Resources\Pages\CreateRecord;
+use App\Filament\Resources\Pages\CreateRecord;
 
 class CreatePromotion extends CreateRecord
 {

@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\Combos\Pages;
 
 use App\Filament\Resources\Combos\ComboResource;
-use Filament\Resources\Pages\CreateRecord;
+use App\Filament\Resources\Pages\CreateRecord;
 
 class CreateCombo extends CreateRecord
 {

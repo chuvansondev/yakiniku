@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 class Booking extends Model
 {
@@ -12,6 +13,10 @@ class Booking extends Model
 
     protected static function booted(): void
     {
+        static::creating(function (Booking $booking): void {
+            $booking->booking_code = 'BK-'.Str::upper((string) Str::ulid());
+        });
+
         static::updating(function (Booking $booking): void {
             if ($booking->isDirty('status')) {
                 self::$statusBeforeUpdate[$booking->getKey()] = (string) $booking->getRawOriginal('status');

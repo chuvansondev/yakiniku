@@ -16,7 +16,10 @@ class BookingForm
         return $schema
             ->components([
                 TextInput::make('booking_code')
-                    ->required(),
+                    ->label('Booking code')
+                    ->disabled()
+                    ->dehydrated(false)
+                    ->placeholder('Automatically generated when saved'),
                 Select::make('restaurant_id')
                     ->relationship('restaurant', 'name')
                     ->required(),

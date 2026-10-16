@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\ComboItems\Pages;
 
 use App\Filament\Resources\ComboItems\ComboItemResource;
-use Filament\Resources\Pages\CreateRecord;
+use App\Filament\Resources\Pages\CreateRecord;
 
 class CreateComboItem extends CreateRecord
 {

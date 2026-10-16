@@ -4,7 +4,7 @@ namespace App\Filament\Resources\ComboItems\Pages;
 
 use App\Filament\Resources\ComboItems\ComboItemResource;
 use Filament\Actions\DeleteAction;
-use Filament\Resources\Pages\EditRecord;
+use App\Filament\Resources\Pages\EditRecord;
 
 class EditComboItem extends EditRecord
 {
