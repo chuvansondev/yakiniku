@@ -1,0 +1,53 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('permissions', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->unique();
+            $table->string('slug')->unique();
+            $table->text('description')->nullable();
+            $table->timestamps();
+        });
+
+        Schema::create('permission_role', function (Blueprint $table) {
+            $table->foreignId('permission_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('role_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('create_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('update_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->timestamps();
+
+            $table->primary(['permission_id', 'role_id']);
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        if (Schema::hasTable('permission_role')) {
+            Schema::table('permission_role', function (Blueprint $table): void {
+                if (Schema::hasColumn('permission_role', 'update_by')) {
+                    $table->dropConstrainedForeignId('update_by');
+                }
+
+                if (Schema::hasColumn('permission_role', 'create_by')) {
+                    $table->dropConstrainedForeignId('create_by');
+                }
+            });
+        }
+
+        Schema::dropIfExists('permission_role');
+        Schema::dropIfExists('permissions');
+    }
+};
