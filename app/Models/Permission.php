@@ -5,9 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Models\Concerns\GeneratesSlug;
 
 class Permission extends Model
 {
+    use GeneratesSlug;
+
     protected $table = 'permissions';
 
     protected $fillable = [

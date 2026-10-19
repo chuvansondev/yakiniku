@@ -15,7 +15,8 @@ class PermissionForm
                 TextInput::make('name')
                     ->required(),
                 TextInput::make('slug')
-                    ->required(),
+                    ->nullable()
+                    ->helperText('Để trống để tự tạo từ tên quyền.'),
                 Textarea::make('description')
                     ->default(null)
                     ->columnSpanFull(),

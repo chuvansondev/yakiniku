@@ -3,6 +3,23 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        @include('frontend.partials.font-preloads')
+        <style>
+            @font-face {
+                font-family: 'UTM BryantLG';
+                src: url('{{ asset('fonts/UTM%20BryantLG.woff2') }}') format('woff2');
+                font-style: normal;
+                font-weight: 400;
+                font-display: swap;
+            }
+            @font-face {
+                font-family: 'UTM BryantLG';
+                src: url('{{ asset('fonts/UTM%20BryantLG_B.woff2') }}') format('woff2');
+                font-style: normal;
+                font-weight: 700;
+                font-display: swap;
+            }
+        </style>
 
         <title>{{ config('app.name', 'Laravel') }}</title>
 
@@ -19,7 +36,8 @@
             </style>
         @endif
     </head>
-    <body class="bg-[#FDFDFC] dark:bg-[#0a0a0a] text-[#1b1b18] flex p-6 lg:p-8 items-center lg:justify-center min-h-screen flex-col">
+    <body class="welcome-page bg-[#FDFDFC] dark:bg-[#0a0a0a] text-[#1b1b18] min-h-screen">
+        @include('frontend.partials.header')
         <header class="w-full lg:max-w-4xl max-w-[335px] text-sm mb-6 not-has-[nav]:hidden">
             @if (Route::has('login'))
                 <nav class="flex items-center justify-end gap-4">
@@ -273,5 +291,7 @@
         @if (Route::has('login'))
             <div class="h-14.5 hidden lg:block"></div>
         @endif
+
+        @include('frontend.partials.footer')
     </body>
 </html>

@@ -17,9 +17,10 @@ class RoleForm
                     ->maxLength(255)
                     ->unique(ignoreRecord: true),
                 TextInput::make('slug')
-                    ->required()
+                    ->nullable()
                     ->maxLength(255)
-                    ->unique(ignoreRecord: true),
+                    ->unique(ignoreRecord: true)
+                    ->helperText('Để trống để tự tạo từ tên vai trò.'),
                 Textarea::make('description')
                     ->columnSpanFull(),
             ]);

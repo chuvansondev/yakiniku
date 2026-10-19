@@ -38,7 +38,7 @@ class MenuItemController extends Controller
 
         $validated['image'] = $resources->storeImage($request->file('image'), 'menu/items');
 
-        $validated['sort_order'] = $validated['sort_order'] ?? 0;
+        $validated['sort_order'] = $validated['sort_order'] ?? null;
         $validated['is_must_try'] = $request->boolean('is_must_try');
         $validated['status'] = $request->boolean('status');
 
@@ -79,7 +79,7 @@ class MenuItemController extends Controller
         }
 
         unset($validated['remove_image']);
-        $validated['sort_order'] = $validated['sort_order'] ?? 0;
+        $validated['sort_order'] = $validated['sort_order'] ?? null;
         $validated['is_must_try'] = $request->boolean('is_must_try');
         $validated['status'] = $request->boolean('status');
 

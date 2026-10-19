@@ -22,9 +22,10 @@ class KidItemForm
                     ->label('Name (English)')
                     ->maxLength(255),
                 TextInput::make('slug')
-                    ->required()
+                    ->nullable()
                     ->maxLength(255)
-                    ->unique(ignoreRecord: true),
+                    ->unique(ignoreRecord: true)
+                    ->helperText('Để trống để tự tạo từ tên món.'),
                 Select::make('type')
                     ->options([
                         'food' => 'Food',
@@ -48,8 +49,8 @@ class KidItemForm
                     ->required(),
                 TextInput::make('sort_order')
                     ->numeric()
-                    ->default(0)
-                    ->required(),
+                    ->nullable()
+                    ->helperText('Để trống để tự tăng thứ tự.'),
                 Toggle::make('status')
                     ->default(true)
                     ->required(),

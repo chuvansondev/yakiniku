@@ -28,9 +28,9 @@ class BannerForm
                 TextInput::make('link')
                     ->default(null),
                 TextInput::make('sort_order')
-                    ->required()
                     ->numeric()
-                    ->default(0),
+                    ->nullable()
+                    ->helperText('Để trống để tự tăng thứ tự.'),
                 Toggle::make('status')
                     ->required(),
                 TextInput::make('delete_at')

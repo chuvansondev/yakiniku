@@ -56,7 +56,7 @@ class KidsItemController extends Controller
         $validated['food_category'] = $validated['type'] === KidsItemType::Food->value
             ? ($validated['food_category'] ?? null)
             : null;
-        $validated['sort_order'] = $validated['sort_order'] ?? 0;
+        $validated['sort_order'] = $validated['sort_order'] ?? null;
         $validated['status'] = $request->boolean('status');
 
         $resources->create(KidsItem::class, $validated);
@@ -96,7 +96,7 @@ class KidsItemController extends Controller
         $validated['food_category'] = $validated['type'] === KidsItemType::Food->value
             ? ($validated['food_category'] ?? null)
             : null;
-        $validated['sort_order'] = $validated['sort_order'] ?? 0;
+        $validated['sort_order'] = $validated['sort_order'] ?? null;
         $validated['status'] = $request->boolean('status');
 
         $resources->update($kidsItem, $validated);

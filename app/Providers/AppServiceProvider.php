@@ -12,6 +12,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $repositories = [
+            \App\Contracts\Repositories\SettingRepositoryInterface::class => \App\Repositories\SettingRepository::class,
             \App\Repositories\Contracts\BannerRepositoryContract::class => \App\Repositories\BannerRepository::class,
             \App\Repositories\Contracts\BookingRepositoryContract::class => \App\Repositories\BookingRepository::class,
             \App\Repositories\Contracts\BookingStatusHistoryRepositoryContract::class => \App\Repositories\BookingStatusHistoryRepository::class,

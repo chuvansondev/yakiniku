@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Concerns\TracksDeletion;
+use App\Models\Concerns\GeneratesSlug;
 
 class Promotion extends Model
 {
-    use SoftDeletes, TracksDeletion;
+    use SoftDeletes, TracksDeletion, GeneratesSlug;
 
     public const DELETED_AT = 'delete_at';
 

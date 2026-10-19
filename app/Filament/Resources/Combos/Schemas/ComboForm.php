@@ -18,7 +18,8 @@ class ComboForm
                 TextInput::make('name')
                     ->required(),
                 TextInput::make('slug')
-                    ->required(),
+                    ->nullable()
+                    ->helperText('Để trống để tự tạo từ tên combo.'),
                 Textarea::make('description')
                     ->default(null)
                     ->columnSpanFull(),
@@ -38,9 +39,9 @@ class ComboForm
                 Toggle::make('status')
                     ->required(),
                 TextInput::make('sort_order')
-                    ->required()
                     ->numeric()
-                    ->default(0),
+                    ->nullable()
+                    ->helperText('Để trống để tự tăng thứ tự.'),
                 TextInput::make('delete_at')
                     ->numeric()
                     ->default(null),

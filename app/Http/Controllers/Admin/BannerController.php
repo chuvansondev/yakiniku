@@ -44,7 +44,7 @@ class BannerController extends Controller
 
             'link' => $validated['link'] ?? null,
 
-            'sort_order' => $validated['sort_order'] ?? 0,
+            'sort_order' => $validated['sort_order'] ?? null,
 
             'status' => $request->boolean('status'),
         ]);
@@ -97,7 +97,7 @@ class BannerController extends Controller
 
             'link' => $validated['link'] ?? null,
 
-            'sort_order' => $validated['sort_order'] ?? 0,
+            'sort_order' => $validated['sort_order'] ?? null,
 
             'status' => $request->boolean('status'),
         ]);

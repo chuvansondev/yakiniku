@@ -40,7 +40,7 @@ class MenuCategoryController extends Controller
 
         $validated['image'] = $resources->storeImage($request->file('image'), 'menu/categories');
 
-        $validated['sort_order'] = $validated['sort_order'] ?? 0;
+        $validated['sort_order'] = $validated['sort_order'] ?? null;
         $validated['status'] = $request->boolean('status');
 
         $resources->create(MenuCategory::class, $validated);
@@ -84,7 +84,7 @@ class MenuCategoryController extends Controller
         }
 
         unset($validated['remove_image']);
-        $validated['sort_order'] = $validated['sort_order'] ?? 0;
+        $validated['sort_order'] = $validated['sort_order'] ?? null;
         $validated['status'] = $request->boolean('status');
 
         $resources->update($category, $validated);

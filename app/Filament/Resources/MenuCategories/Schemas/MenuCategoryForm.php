@@ -16,17 +16,25 @@ class MenuCategoryForm
             ->components([
                 TextInput::make('name')
                     ->required(),
+                TextInput::make('name_en')
+                    ->label('Name (English)'),
                 TextInput::make('slug')
-                    ->required(),
+                    ->nullable()
+                    ->maxLength(255)
+                    ->helperText('Để trống để tự tạo slug từ tên danh mục.'),
                 Textarea::make('description')
+                    ->default(null)
+                    ->columnSpanFull(),
+                Textarea::make('description_en')
+                    ->label('Description (English)')
                     ->default(null)
                     ->columnSpanFull(),
                 FileUpload::make('image')
                     ->image(),
                 TextInput::make('sort_order')
-                    ->required()
                     ->numeric()
-                    ->default(0),
+                    ->nullable()
+                    ->helperText('Để trống để tự tăng thứ tự.'),
                 Toggle::make('status')
                     ->required(),
                 TextInput::make('delete_at')

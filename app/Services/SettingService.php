@@ -15,12 +15,34 @@ class SettingService
     {
         $settings = PublicDataCache::remember(PublicDataCache::SETTINGS, 'all', fn () => $this->settings->allKeyed());
 
-        return $settings->get($key) ?? $default;
+        if ($key === 'email' && ! $settings->has('email') && $settings->has('Email')) {
+            return $settings->get('Email') ?? $default;
+        }
+
+        $value = $settings->get($key) ?? $default;
+
+        if ($key === 'header_submenus' && is_string($value)) {
+            return json_decode($value, true) ?: [];
+        }
+
+        return $value;
     }
 
     public function all(): Collection
     {
-        return PublicDataCache::remember(PublicDataCache::SETTINGS, 'all', fn () => $this->settings->allKeyed());
+        $settings = PublicDataCache::remember(PublicDataCache::SETTINGS, 'all', fn () => $this->settings->allKeyed());
+
+        // Older settings may have been stored with a display label as the key.
+        // Normalize the legacy Email key so the form and frontend use `email`.
+        if (! $settings->has('email') && $settings->has('Email')) {
+            $settings->put('email', $settings->get('Email'));
+        }
+        $submenus = $settings->get('header_submenus');
+        if (is_string($submenus)) {
+            $settings->put('header_submenus', json_decode($submenus, true) ?: []);
+        }
+
+        return $settings;
     }
 
     public function updateMany(array $settings): void
@@ -28,6 +50,10 @@ class SettingService
         $userId = Auth::id();
 
         foreach ($settings as $key => $value) {
+            if ($key === 'header_submenus' && is_array($value)) {
+                $value = json_encode($value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            }
+
             $this->settings->updateValue((string) $key, $value, $userId);
         }
 

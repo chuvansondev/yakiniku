@@ -7,10 +7,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Concerns\TracksDeletion;
+use App\Models\Concerns\GeneratesSlug;
+use App\Models\Concerns\GeneratesSortOrder;
 
 class Combo extends Model
 {
-    use SoftDeletes, TracksDeletion;
+    use SoftDeletes, TracksDeletion, GeneratesSlug, GeneratesSortOrder;
 
     public const DELETED_AT = 'delete_at';
 

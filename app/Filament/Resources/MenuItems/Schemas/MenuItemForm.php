@@ -20,9 +20,16 @@ class MenuItemForm
                     ->required(),
                 TextInput::make('name')
                     ->required(),
+                TextInput::make('name_en')
+                    ->label('Name (English)'),
                 TextInput::make('slug')
-                    ->required(),
+                    ->nullable()
+                    ->helperText('Để trống để tự tạo từ tên món.'),
                 Textarea::make('description')
+                    ->default(null)
+                    ->columnSpanFull(),
+                Textarea::make('description_en')
+                    ->label('Description (English)')
                     ->default(null)
                     ->columnSpanFull(),
                 FileUpload::make('image')
@@ -37,9 +44,9 @@ class MenuItemForm
                 Toggle::make('is_for_kids')
                     ->required(),
                 TextInput::make('sort_order')
-                    ->required()
                     ->numeric()
-                    ->default(0),
+                    ->nullable()
+                    ->helperText('Để trống để tự tăng thứ tự.'),
                 Toggle::make('status')
                     ->required(),
                 TextInput::make('delete_at')

@@ -5,11 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Concerns\GeneratesSlug;
+use App\Models\Concerns\GeneratesSortOrder;
 use App\Models\Concerns\TracksDeletion;
 
 class MenuCategory extends Model
 {
-    use SoftDeletes, TracksDeletion;
+    use SoftDeletes, TracksDeletion, GeneratesSlug, GeneratesSortOrder;
 
     public const DELETED_AT = 'delete_at';
 
