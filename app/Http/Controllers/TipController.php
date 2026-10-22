@@ -6,18 +6,19 @@ use App\Models\Tip;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
+use App\Services\PublicDataCache;
 
 class TipController extends Controller
 {
     public function index(): View
     {
-        $tips = Tip::query()
+        $tips = clone PublicDataCache::remember(PublicDataCache::TIPS, 'published', fn () => Tip::query()
             ->where('status', true)
             ->where(fn ($query) => $query->whereNull('published_at')->orWhere('published_at', '<=', now()))
             ->orderByRaw('published_at IS NULL')
             ->orderByDesc('published_at')
             ->orderByDesc('id')
-            ->get();
+            ->get());
 
         $tips->each(fn (Tip $tip) => $tip->setAttribute('page_image_url', $this->imageUrl($tip->image)));
 

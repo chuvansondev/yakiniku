@@ -3,6 +3,18 @@
 namespace App\Providers;
 
 use App\Models\User;
+use App\Models\Banner;
+use App\Models\Combo;
+use App\Models\ComboItem;
+use App\Models\KidItem;
+use App\Models\MenuCategory;
+use App\Models\MenuItem;
+use App\Models\Promotion;
+use App\Models\Recipe;
+use App\Models\Restaurant;
+use App\Models\Setting;
+use App\Models\Tip;
+use App\Observers\PublicDataCacheObserver;
 use App\Policies\UserPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -18,6 +30,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $repositories = [
+            \App\Contracts\Repositories\AdminResourceRepositoryInterface::class => \App\Repositories\AdminResourceRepository::class,
             \App\Contracts\Repositories\SettingRepositoryInterface::class => \App\Repositories\SettingRepository::class,
             \App\Contracts\Repositories\BookingRepositoryInterface::class => \App\Repositories\BookingRepository::class,
             \App\Contracts\Repositories\LeadRepositoryInterface::class => \App\Repositories\LeadRepository::class,
@@ -52,6 +65,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        foreach ([Banner::class, Combo::class, ComboItem::class, KidItem::class, MenuCategory::class, MenuItem::class, Promotion::class, Recipe::class, Restaurant::class, Setting::class, Tip::class] as $model) {
+            $model::observe(PublicDataCacheObserver::class);
+        }
+
         Gate::policy(User::class, UserPolicy::class);
         Field::configureUsing(fn (Field $field) => $field->translateLabel());
         Column::configureUsing(fn (Column $column) => $column->translateLabel());

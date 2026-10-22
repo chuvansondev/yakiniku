@@ -5,6 +5,7 @@
 <!doctype html>
 <html lang="{{ $isEnglish ? 'en' : 'vi' }}">
 <head>
+    @include('frontend.partials.assets')
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="{{ $isEnglish ? 'Discover the latest dining offers and promotions at '.$menuBrand.'.' : 'Khám phá những ưu đãi và khuyến mãi mới nhất tại '.$menuBrand.'.' }}">

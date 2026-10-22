@@ -13,12 +13,17 @@ class PermissionForm
         return $schema
             ->components([
                 TextInput::make('name')
-                    ->required(),
+                    ->required()
+                    ->maxLength(255)
+                    ->unique(ignoreRecord: true),
                 TextInput::make('slug')
                     ->nullable()
+                    ->maxLength(255)
+                    ->unique(ignoreRecord: true)
                     ->helperText('Để trống để tự tạo từ tên quyền.'),
                 Textarea::make('description')
                     ->default(null)
+                    ->maxLength(65535)
                     ->columnSpanFull(),
             ]);
     }

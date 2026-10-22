@@ -72,6 +72,11 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmailContr
         return $this->belongsTo(Role::class);
     }
 
+    public function sendPasswordResetNotification($token): void
+    {
+        $this->notify((new \App\Notifications\ResetPasswordNotification($token))->locale(app()->getLocale()));
+    }
+
     public function bookings(): HasMany
     {
         return $this->hasMany(Booking::class);

@@ -29,6 +29,7 @@
     "Save": "Save",
     "pending": "Pending",
     "confirmed": "Confirmed",
+    "cancellation_requested": "Cancellation requested",
     "cancelled": "Cancelled",
     "completed": "Completed",
     "active": "Active",

@@ -6,6 +6,7 @@
 <!doctype html>
 <html lang="{{ $isEnglish ? 'en' : 'vi' }}">
 <head>
+    @include('frontend.partials.assets')
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="color-scheme" content="light">
@@ -45,6 +46,7 @@
                         $bookingStatusLabel = $bookingStatus?->label() ?? $booking->status;
                     @endphp
                     @if (session('booking_cancelled'))<p class="booking-cancel-notice">{{ $isEnglish ? 'Your booking has been cancelled.' : 'Đặt bàn đã được hủy.' }}</p>@endif
+                    @if (session('booking_cancellation_requested') || $booking->status === 'cancellation_requested')<p class="booking-cancel-notice">{{ $isEnglish ? 'Your cancellation request was sent. The booking remains active until the restaurant confirms it.' : 'Yêu cầu hủy đã được gửi. Đặt bàn vẫn còn hiệu lực cho đến khi nhà hàng xác nhận.' }}</p>@endif
                     <div class="booking-confirmation__top"><span class="booking-status booking-status--{{ $booking->status }}">{{ $isEnglish ? match($booking->status) { 'confirmed' => 'Confirmed', 'cancelled' => 'Cancelled', 'completed' => 'Completed', default => 'Pending confirmation' } : $bookingStatusLabel }}</span>
                         @if (in_array($booking->status, ['pending', 'confirmed'], true))<form method="post" action="{{ route('booking.cancel-confirmation') }}" onsubmit="return confirm('{{ $isEnglish ? 'Cancel this booking?' : 'Bạn có chắc muốn hủy đặt bàn này?' }}')">@csrf<button class="booking-cancel-link" type="submit">{{ $isEnglish ? 'Cancel booking' : 'Hủy đặt bàn' }}</button></form>@endif
                     </div>

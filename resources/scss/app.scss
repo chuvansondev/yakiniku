@@ -1,0 +1,43 @@
+@use 'tokens' as *;
+@use 'mixins' as *;
+@use 'components';
+
+:root {
+    --yk-color-brand: #{$color-brand};
+    --yk-color-brand-dark: #{$color-brand-dark};
+    --yk-color-brand-soft: #{$color-brand-soft};
+    --yk-color-ink: #{$color-ink};
+    --yk-color-muted: #{$color-muted};
+    --yk-color-surface: #{$color-surface};
+    --yk-color-background: #{$color-background};
+    --yk-color-border: #{$color-border};
+    --yk-space-1: #{$space-1};
+    --yk-space-2: #{$space-2};
+    --yk-space-3: #{$space-3};
+    --yk-space-4: #{$space-4};
+    --yk-space-6: #{$space-6};
+    --yk-radius-sm: #{$radius-sm};
+    --yk-radius-md: #{$radius-md};
+    --yk-radius-lg: #{$radius-lg};
+    --yk-radius-xl: #{$radius-xl};
+    --yk-shadow-sm: #{$shadow-sm};
+    --yk-shadow-md: #{$shadow-md};
+    --yk-content-width: #{$content-width};
+    --yk-transition-fast: #{$transition-fast};
+    --yk-transition-normal: #{$transition-normal};
+}
+
+.site-header :focus-visible,
+.home-page :focus-visible,
+.recipe-page :focus-visible,
+.tips-page :focus-visible,
+.about-page :focus-visible,
+.auth-main :focus-visible,
+.booking-page :focus-visible,
+.promo-page :focus-visible,
+.kids-page :focus-visible,
+.menu-page :focus-visible,
+.combo-page :focus-visible,
+.frontend-bookings :focus-visible {
+    @include focus-ring;
+}

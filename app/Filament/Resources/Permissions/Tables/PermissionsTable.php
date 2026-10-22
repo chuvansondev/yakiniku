@@ -2,8 +2,6 @@
 
 namespace App\Filament\Resources\Permissions\Tables;
 
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
@@ -18,7 +16,16 @@ class PermissionsTable
                 TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('slug')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('description')
+                    ->limit(60)
+                    ->searchable()
+                    ->toggleable(),
+                TextColumn::make('roles_count')
+                    ->label('Roles')
+                    ->counts('roles')
+                    ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -35,10 +42,6 @@ class PermissionsTable
                 EditAction::make(),
                 DeleteAction::make(),
             ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
-            ]);
+            ->toolbarActions([]);
     }
 }

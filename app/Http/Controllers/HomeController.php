@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Banner;
 use App\Models\MenuCategory;
 use App\Models\Restaurant;
+use App\Services\PublicDataCache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
@@ -13,7 +14,7 @@ class HomeController extends Controller
 {
     public function __invoke(): View
     {
-        $banners = Banner::query()->where('status', true)->orderBy('sort_order')->orderBy('id')->get();
+        $banners = clone PublicDataCache::remember(PublicDataCache::BANNERS, 'homepage', fn () => Banner::query()->where('status', true)->orderBy('sort_order')->orderBy('id')->get());
         $banners->each(function (Banner $banner): void {
             $path = $banner->image;
             $imageUrl = null;
@@ -32,8 +33,8 @@ class HomeController extends Controller
 
             $banner->setAttribute('homepage_image_url', $imageUrl);
         });
-        $categories = MenuCategory::query()
-            ->orderBy('sort_order')->orderBy('id')->limit(6)->get();
+        $categories = clone PublicDataCache::remember(PublicDataCache::MENU, 'homepage-categories', fn () => MenuCategory::query()
+            ->orderBy('sort_order')->orderBy('id')->limit(6)->get());
         $categories->each(function (MenuCategory $category): void {
             $path = $category->image;
             $imageUrl = null;
@@ -52,7 +53,7 @@ class HomeController extends Controller
 
             $category->setAttribute('homepage_image_url', $imageUrl);
         });
-        $restaurants = Restaurant::query()->where('status', true)->orderBy('name')->get();
+        $restaurants = clone PublicDataCache::remember(PublicDataCache::RESTAURANTS, 'active', fn () => Restaurant::query()->where('status', true)->orderBy('name')->get());
 
         return view('home.index', compact('banners', 'categories', 'restaurants'));
     }

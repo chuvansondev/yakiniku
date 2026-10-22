@@ -69,6 +69,23 @@
     .site-header__account { display:flex; align-items:center; gap:10px; color:#65534a; font-size:14px; white-space:nowrap; }
     .site-header__account a { color:#8f2527; text-decoration:none; font-weight:700; }
     .site-header__account button { padding:0; border:0; background:none; color:#8f2527; font:inherit; cursor:pointer; }
+    .site-account { position:relative; }
+    .site-header__account .site-account__trigger { display:flex; align-items:center; gap:8px; min-height:44px; margin:0; padding:4px 8px 4px 4px; border:1px solid #eadfd5; border-radius:24px; background:#fff; }
+    .site-account__avatar { display:grid; place-items:center; flex-shrink:0; width:34px; height:34px; border-radius:50%; background:#a42127; color:#fff; font-weight:700; }
+    .site-account__name { max-width:110px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .site-account__chevron { transition:transform .15s ease; }
+    .site-account__trigger[aria-expanded="true"] .site-account__chevron { transform:rotate(180deg); }
+    .site-account__panel { position:absolute; top:calc(100% + 10px); right:0; z-index:40; width:min(250px,calc(100vw - 24px)); padding:8px; border:1px solid #eadfd5; border-radius:10px; background:#fff; box-shadow:0 12px 32px #38271c24; white-space:normal; }
+    .site-account__panel[hidden] { display:none; }
+    .site-account__identity { padding:8px 12px 12px; border-bottom:1px solid #eadfd5; margin-bottom:4px; overflow-wrap:anywhere; }
+    .site-account__identity strong,.site-account__identity small { display:block; }
+    .site-account__identity small { margin-top:3px; color:#75645a; }
+    .site-header__account .site-account__option { display:block; width:100%; min-height:44px; margin:0; padding:11px 12px; border:0; border-radius:6px; background:none; color:#493b35; text-align:left; font:inherit; text-decoration:none; }
+    .site-account__panel form { margin:0; }
+    .site-header__account .site-account__option:hover,.site-header__account .site-account__option:focus-visible { background:#f8f3f0; color:#a42127; }
+    .site-account__trigger:focus-visible { outline:2px solid #a42127; outline-offset:3px; }
+    @media(max-width:1200px) { .site-account__name { display:none; } }
+    @media(max-width:480px) { .site-header__brand { min-width:0; } .site-header__brand img { max-width:100%; } .site-header__inner { grid-template-columns:minmax(0,1fr) auto; } .site-header__controls { gap:6px; } .site-header__account .site-account__trigger { padding:3px; } .site-account__chevron { display:none; } }
     .site-header__locale { display: inline-flex; align-items: center; gap: 4px; padding: 5px; border: 1px solid rgba(73, 59, 53, .22); border-radius: 3px; }
     .site-header__locale button { min-width: 48px; padding: 8px 10px; border: 0; border-radius: 2px; background: transparent; color: #594c45; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; transition: background .18s ease, color .18s ease; }
     .site-header__locale button:hover { background: #f4eeea; }
@@ -147,8 +164,19 @@
         <div class="site-header__controls">
             <div class="site-header__account">
                 @auth
-                    <a href="{{ route('booking.mine') }}">{{ app()->getLocale() === 'en' ? 'My bookings' : 'Đặt bàn của tôi' }}</a>
-                    <form method="POST" action="{{ route('logout') }}">@csrf<button type="submit">{{ app()->getLocale() === 'en' ? 'Sign out' : 'Đăng xuất' }}</button></form>
+                    <div class="site-account" data-account-dropdown>
+                        <button class="site-account__trigger" type="button" aria-expanded="false" aria-controls="siteAccountPanel" aria-label="{{ app()->getLocale() === 'en' ? 'My account' : 'Tài khoản của tôi' }}">
+                            <span class="site-account__avatar" aria-hidden="true">{{ mb_strtoupper(mb_substr(trim(auth()->user()->name), 0, 1)) ?: '?' }}</span>
+                            <span class="site-account__name">{{ auth()->user()->name }}</span>
+                            <svg class="site-account__chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                        </button>
+                        <div id="siteAccountPanel" class="site-account__panel" hidden>
+                            <div class="site-account__identity"><strong>{{ auth()->user()->name }}</strong><small>{{ auth()->user()->email }}</small></div>
+                            <a class="site-account__option" href="{{ route('booking.mine') }}">{{ app()->getLocale() === 'en' ? 'My bookings' : 'Đặt bàn của tôi' }}</a>
+                            <a class="site-account__option" href="{{ route('password.change') }}">{{ app()->getLocale() === 'en' ? 'Change password' : 'Đổi mật khẩu' }}</a>
+                            <form method="POST" action="{{ route('logout') }}">@csrf<button class="site-account__option" type="submit">{{ app()->getLocale() === 'en' ? 'Sign out' : 'Đăng xuất' }}</button></form>
+                        </div>
+                    </div>
                 @else
                     <a href="{{ route('login') }}">{{ app()->getLocale() === 'en' ? 'Sign in' : 'Đăng nhập' }}</a>
                     <a href="{{ route('register') }}">{{ app()->getLocale() === 'en' ? 'Register' : 'Đăng ký' }}</a>
@@ -211,4 +239,32 @@
         </nav>
     </div>
 </header>
+@auth
+<script>
+    (() => {
+        const dropdown = document.querySelector('[data-account-dropdown]');
+        if (!dropdown) return;
+        const trigger = dropdown.querySelector('.site-account__trigger');
+        const panel = dropdown.querySelector('.site-account__panel');
+        const setOpen = (open) => {
+            trigger.setAttribute('aria-expanded', String(open));
+            panel.hidden = !open;
+        };
+        trigger.addEventListener('click', () => setOpen(panel.hidden));
+        document.addEventListener('click', (event) => {
+            if (!dropdown.contains(event.target)) setOpen(false);
+        });
+        dropdown.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && !panel.hidden) {
+                setOpen(false);
+                trigger.focus();
+                event.preventDefault();
+            }
+        });
+        dropdown.addEventListener('focusout', (event) => {
+            if (!dropdown.contains(event.relatedTarget)) setOpen(false);
+        });
+    })();
+</script>
+@endauth
 

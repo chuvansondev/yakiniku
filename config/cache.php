@@ -17,6 +17,8 @@ return [
 
     'default' => env('CACHE_STORE', 'database'),
 
+    'public_data_ttl' => (int) env('PUBLIC_DATA_TTL', 30),
+
     /*
     |--------------------------------------------------------------------------
     | Cache Stores

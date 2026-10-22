@@ -274,11 +274,21 @@ class BookingService
         return $this->bookings->updateBooking($booking, $attributes);
     }
 
-    public function cancelIfAllowed(Booking $booking): void
+    public function requestCancellation(Booking $booking): BookingStatus
     {
-        if (in_array($booking->status, [BookingStatus::Pending->value, BookingStatus::Confirmed->value], true)) {
+        if ($booking->status === BookingStatus::Pending->value) {
             $this->bookings->updateStatus($booking, BookingStatus::Cancelled->value);
+
+            return BookingStatus::Cancelled;
         }
+
+        if ($booking->status === BookingStatus::Confirmed->value) {
+            $this->bookings->updateStatus($booking, BookingStatus::CancellationRequested->value);
+
+            return BookingStatus::CancellationRequested;
+        }
+
+        return BookingStatus::tryFrom($booking->status) ?? BookingStatus::Pending;
     }
 
     private function generateBookingCode(): string

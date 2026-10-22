@@ -6,18 +6,19 @@ use App\Models\Recipe;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
+use App\Services\PublicDataCache;
 
 class RecipeController extends Controller
 {
     public function index(): View
     {
-        $recipes = Recipe::query()
+        $recipes = clone PublicDataCache::remember(PublicDataCache::RECIPES, 'published', fn () => Recipe::query()
             ->where('status', true)
             ->where(fn ($query) => $query->whereNull('published_at')->orWhere('published_at', '<=', now()))
             ->orderByRaw('published_at IS NULL')
             ->orderByDesc('published_at')
             ->orderByDesc('id')
-            ->get();
+            ->get());
 
         $recipes->each(fn (Recipe $recipe) => $recipe->setAttribute('menu_image_url', $this->imageUrl($recipe->image)));
 

@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\Concerns\GeneratesSlug;
+use App\Models\Pivots\PermissionRole;
+use Illuminate\Support\Facades\Auth;
 
 class Role extends Model
 {
@@ -16,9 +18,19 @@ class Role extends Model
         'name',
         'slug',
         'description',
-        'create_by',
-        'update_by',
     ];
+
+    protected static function booted(): void
+    {
+        static::creating(function (Role $role): void {
+            $role->create_by ??= Auth::id();
+            $role->update_by ??= Auth::id();
+        });
+
+        static::updating(function (Role $role): void {
+            $role->update_by = Auth::id();
+        });
+    }
 
     public function users(): HasMany
     {
@@ -28,6 +40,7 @@ class Role extends Model
     public function permissions(): BelongsToMany
     {
         return $this->belongsToMany(Permission::class, 'permission_role', 'role_id', 'permission_id')
+            ->using(PermissionRole::class)
             ->withPivot(['create_by', 'update_by'])
             ->withTimestamps();
     }

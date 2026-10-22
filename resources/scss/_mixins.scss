@@ -1,0 +1,28 @@
+@use 'tokens' as *;
+
+@mixin focus-ring($color: $color-focus, $offset: $space-1) {
+    outline: 2px solid $color;
+    outline-offset: $offset;
+}
+
+@mixin surface($radius: $radius-lg, $shadow: $shadow-sm) {
+    border-radius: $radius;
+    background: $color-surface;
+    box-shadow: $shadow;
+}
+
+@mixin rounded-control($radius: $radius-md) {
+    border-radius: $radius;
+    transition: background-color $transition-fast, border-color $transition-fast, color $transition-fast;
+}
+
+@mixin centered($display: grid) {
+    display: $display;
+    place-items: center;
+}
+
+@mixin respond-below($breakpoint) {
+    @media (max-width: $breakpoint) {
+        @content;
+    }
+}

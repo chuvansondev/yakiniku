@@ -5,6 +5,7 @@
 <!doctype html>
 <html lang="{{ $isEnglish ? 'en' : 'vi' }}">
 <head>
+    @include('frontend.partials.assets')
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="{{ $mustTryOnly ? ($isEnglish ? 'Explore the signature must-try dishes at '.$menuBrand.'.' : 'Khám phá những món đặc sắc nhất định nên thử tại '.$menuBrand.'.') : ($isEnglish ? 'Explore the Yakiniku menu, seasonal specialties and signature cuts.' : 'Khám phá thực đơn Yakiniku với những món đặc sắc và tuyển chọn.') }}">

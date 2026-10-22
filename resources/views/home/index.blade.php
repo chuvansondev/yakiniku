@@ -11,6 +11,7 @@
 <!doctype html>
 <html lang="{{ $isEnglish ? 'en' : 'vi' }}">
 <head>
+    @include('frontend.partials.assets')
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ setting('header_brand_name'.($isEnglish ? '_en' : '')) ?: config('app.name') }}</title>

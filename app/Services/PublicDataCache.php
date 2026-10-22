@@ -14,6 +14,9 @@ class PublicDataCache
     public const PROMOTIONS = 'public-data:promotions';
     public const BANNERS = 'public-data:banners';
     public const SETTINGS = 'public-data:settings';
+    public const RESTAURANTS = 'public-data:restaurants';
+    public const RECIPES = 'public-data:recipes';
+    public const TIPS = 'public-data:tips';
 
     private const TAGS = [
         self::MENU,
@@ -22,6 +25,9 @@ class PublicDataCache
         self::PROMOTIONS,
         self::BANNERS,
         self::SETTINGS,
+        self::RESTAURANTS,
+        self::RECIPES,
+        self::TIPS,
     ];
 
     public static function remember(string $group, string $key, callable $callback): mixed

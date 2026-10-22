@@ -8,6 +8,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TimePicker;
 use Filament\Schemas\Schema;
+use App\Enums\BookingStatus;
 
 class BookingForm
 {
@@ -50,12 +51,7 @@ class BookingForm
                     ->default(null)
                     ->columnSpanFull(),
                 Select::make('status')
-                    ->options([
-            'pending' => 'Pending',
-            'confirmed' => 'Confirmed',
-            'cancelled' => 'Cancelled',
-            'completed' => 'Completed',
-        ])
+                    ->options(collect(BookingStatus::cases())->mapWithKeys(fn (BookingStatus $status): array => [$status->value => $status->label()])->all())
                     ->default('pending')
                     ->required(),
                 TextInput::make('qr_code')

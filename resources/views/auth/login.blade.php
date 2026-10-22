@@ -2,6 +2,7 @@
 <!doctype html>
 <html lang="{{ $isEnglish ? 'en' : 'vi' }}">
 <head>
+    @include('frontend.partials.assets')
     <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ $isEnglish ? 'Sign in' : 'Đăng nhập' }} | {{ config('app.name') }}</title>
     @include('frontend.partials.font-preloads')
@@ -26,6 +27,7 @@
         <label class="remember"><input type="checkbox" name="remember" value="1">{{ $isEnglish ? 'Remember me' : 'Ghi nhớ đăng nhập' }}</label>
         <button type="submit">{{ $isEnglish ? 'Sign in' : 'Đăng nhập' }}</button><a class="link" href="{{ route('register') }}">{{ $isEnglish ? 'Create account' : 'Tạo tài khoản' }}</a>
     </form>
+    <p><a href="{{ route('password.request') }}" style="color:#96262a">{{ $isEnglish ? 'Forgot your password?' : 'Quên mật khẩu?' }}</a></p>
 </section></main>
 @include('frontend.partials.footer')
 </body></html>

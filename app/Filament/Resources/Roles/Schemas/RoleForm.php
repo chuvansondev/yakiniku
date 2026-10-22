@@ -25,8 +25,11 @@ class RoleForm
                 Textarea::make('description')
                     ->columnSpanFull(),
                 CheckboxList::make('permissions')
+                    ->label('Quyền được cấp')
                     ->relationship(titleAttribute: 'name')
+                    ->searchable()
                     ->columns(2)
+                    ->bulkToggleable()
                     ->columnSpanFull(),
             ]);
     }

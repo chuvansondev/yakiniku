@@ -1,4 +1,9 @@
 {
+    "The current password is incorrect.": "Mật khẩu hiện tại không chính xác.",
+    "Your password has been changed.": "Mật khẩu đã được thay đổi thành công.",
+    "If your email is registered, we will send a password reset link.": "Nếu email đã được đăng ký, chúng tôi sẽ gửi liên kết đặt lại mật khẩu.",
+    "The password reset link is invalid or has expired. Please request a new link.": "Liên kết đặt lại mật khẩu không hợp lệ hoặc đã hết hạn. Vui lòng yêu cầu liên kết mới.",
+    "Your password has been reset. You can sign in.": "Mật khẩu đã được đặt lại. Bạn có thể đăng nhập.",
     "admin.nav.group.booking_customers": "Đặt bàn & khách hàng",
     "admin.nav.group.menu": "Thực đơn",
     "admin.nav.group.content": "Nội dung",
@@ -30,6 +35,7 @@
     "Footer": "Chân trang",
     "pending": "Chờ xác nhận",
     "confirmed": "Đã xác nhận",
+    "cancellation_requested": "Chờ duyệt hủy",
     "cancelled": "Đã hủy",
     "completed": "Hoàn thành",
     "active": "Đang hoạt động",

@@ -9,6 +9,7 @@ use App\Models\Promotion;
 use App\Models\KidItem;
 use App\Enums\KidsFoodCategory;
 use App\Enums\KidsItemType;
+use App\Services\PublicDataCache;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -28,14 +29,14 @@ class MenuController extends Controller
 
     public function combos(): View
     {
-        $combos = Combo::query()
+        $combos = clone PublicDataCache::remember(PublicDataCache::COMBOS, 'public-page', fn () => Combo::query()
             ->where('status', true)
             ->where(fn ($query) => $query->whereNull('start_date')->orWhereDate('start_date', '<=', today()))
             ->where(fn ($query) => $query->whereNull('end_date')->orWhereDate('end_date', '>=', today()))
             ->with(['menuItems' => fn ($query) => $query->orderBy('sort_order')->orderBy('id')])
             ->orderBy('sort_order')
             ->orderBy('id')
-            ->get();
+            ->get());
 
         $combos->each(fn (Combo $combo) => $combo->setAttribute('menu_image_url', $this->imageUrl($combo->image)));
 
@@ -44,13 +45,13 @@ class MenuController extends Controller
 
     public function promotions(): View
     {
-        $promotions = Promotion::query()
+        $promotions = clone PublicDataCache::remember(PublicDataCache::PROMOTIONS, 'public-page', fn () => Promotion::query()
             ->where('status', true)
             ->where(fn ($query) => $query->whereNull('start_date')->orWhereDate('start_date', '<=', today()))
             ->where(fn ($query) => $query->whereNull('end_date')->orWhereDate('end_date', '>=', today()))
             ->orderByDesc('start_date')
             ->orderByDesc('id')
-            ->get();
+            ->get());
 
         $promotions->each(fn (Promotion $promotion) => $promotion->setAttribute('menu_image_url', $this->imageUrl($promotion->image)));
 
@@ -71,13 +72,13 @@ class MenuController extends Controller
             $selectedCategory = '';
         }
 
-        $items = KidItem::query()
+        $items = clone PublicDataCache::remember(PublicDataCache::KIDS_ITEMS, 'public-page:'.md5(json_encode([$selectedType, $selectedCategory])), fn () => KidItem::query()
             ->where('status', true)
             ->when($selectedType !== '', fn ($query) => $query->where('type', $selectedType))
             ->when($selectedCategory !== '', fn ($query) => $query->where('food_category', $selectedCategory))
             ->orderBy('sort_order')
             ->orderBy('id')
-            ->get();
+            ->get());
 
         $items->each(fn (KidItem $item) => $item->setAttribute('menu_image_url', $this->imageUrl($item->image)));
 
@@ -104,13 +105,13 @@ class MenuController extends Controller
             ->orderBy('sort_order')
             ->orderBy('id');
 
-        $categories = MenuCategory::query()
+        $categories = clone PublicDataCache::remember(PublicDataCache::MENU, 'public-page:'.(int) $mustTryOnly, fn () => MenuCategory::query()
             ->where('status', true)
             ->whereHas('menuItems', $itemsQuery)
             ->with(['menuItems' => $itemsQuery])
             ->orderBy('sort_order')
             ->orderBy('id')
-            ->get();
+            ->get());
 
         $categories->each(function (MenuCategory $category): void {
             $category->setAttribute('menu_image_url', $this->imageUrl($category->image));

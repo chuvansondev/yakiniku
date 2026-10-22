@@ -102,9 +102,18 @@ class AuthController extends Controller
 
     public function showResetPassword(Request $request, string $token)
     {
-        return view('auth.passwords.reset', [
+        $email = $request->query('email');
+        $user = is_string($email) && filter_var($email, FILTER_VALIDATE_EMAIL)
+            ? Password::getUser(['email' => $email])
+            : null;
+
+        return response()->view('auth.passwords.reset', [
             'token' => $token,
-            'email' => $request->query('email', ''),
+            'email' => is_string($email) ? $email : '',
+            'validLink' => $user && Password::tokenExists($user, $token),
+        ])->withHeaders([
+            'Cache-Control' => 'no-store, private',
+            'Referrer-Policy' => 'no-referrer',
         ]);
     }
 
@@ -120,6 +129,7 @@ class AuthController extends Controller
             $user->forceFill([
                 'password' => $password,
                 'remember_token' => Str::random(60),
+                'session_version' => $user->session_version + 1,
             ])->save();
 
             event(new PasswordReset($user));
@@ -155,10 +165,13 @@ class AuthController extends Controller
         $request->user()->forceFill([
             'password' => $data['password'],
             'remember_token' => Str::random(60),
+            'session_version' => $request->user()->session_version + 1,
         ])->save();
 
+        Password::deleteToken($request->user());
         $request->session()->regenerate();
+        $request->session()->put('auth_session_version', $request->user()->session_version);
 
-        return back()->with('status', __('Your password has been changed.'));
+        return redirect()->route('password.change')->with('status', __('Your password has been changed.'));
     }
 }

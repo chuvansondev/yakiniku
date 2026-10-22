@@ -48,7 +48,7 @@ class RoleResource extends Resource
 
     public static function canDelete(Model $record): bool
     {
-        return (bool) auth()->user()?->is_admin;
+        return (bool) auth()->user()?->is_admin && ! $record->users()->exists();
     }
 
     public static function canDeleteAny(): bool

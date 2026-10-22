@@ -2,6 +2,7 @@
 <!doctype html>
 <html lang="{{ $isEnglish ? 'en' : 'vi' }}">
 <head>
+    @include('frontend.partials.assets')
     <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ $isEnglish ? 'My bookings' : 'Lịch sử đặt bàn' }} | {{ config('app.name') }}</title>
     <style>
@@ -10,9 +11,10 @@
 </head>
 <body>
 @include('frontend.partials.header')
-<main>
+<main class="frontend-bookings">
     <header><h1>{{ $isEnglish ? 'My bookings' : 'Lịch sử đặt bàn' }}</h1><a class="button" href="{{ route('booking.create') }}">{{ $isEnglish ? 'Book a table' : 'Đặt bàn' }}</a></header>
     @if (session('booking_cancelled'))<div class="notice" role="status">{{ $isEnglish ? 'The booking was cancelled.' : 'Đặt bàn đã được hủy.' }}</div>@endif
+    @if (session('booking_cancellation_requested'))<div class="notice" role="status">{{ $isEnglish ? 'Your cancellation request was sent. The booking remains active until the restaurant confirms it.' : 'Yêu cầu hủy đã được gửi. Đặt bàn vẫn còn hiệu lực cho đến khi nhà hàng xác nhận.' }}</div>@endif
     @forelse ($bookings as $booking)
         @php($status = \App\Enums\BookingStatus::tryFrom($booking->status))
         <article class="booking">
@@ -25,7 +27,9 @@
                 @if ($booking->table_codes)<span>{{ $isEnglish ? 'Tables' : 'Bàn' }}: {{ implode(', ', $booking->table_codes) }}</span>@endif
                 @if ($booking->note)<span>{{ $isEnglish ? 'Note' : 'Ghi chú' }}: {{ $booking->note }}</span>@endif
             </div>
-            @if (in_array($booking->status, ['pending', 'confirmed'], true))
+                @if ($booking->status === 'cancellation_requested')
+                    <p>{{ $isEnglish ? 'Cancellation requested. Waiting for restaurant confirmation.' : 'Đã gửi yêu cầu hủy, đang chờ nhà hàng xác nhận.' }}</p>
+                @elseif (in_array($booking->status, ['pending', 'confirmed'], true))
                 <form method="POST" action="{{ route('booking.mine.cancel', $booking) }}" onsubmit="return confirm('{{ $isEnglish ? 'Cancel this booking?' : 'Bạn muốn hủy đặt bàn này?' }}')">
                     @csrf<button class="cancel" type="submit">{{ $isEnglish ? 'Cancel booking' : 'Hủy đặt bàn' }}</button>
                 </form>

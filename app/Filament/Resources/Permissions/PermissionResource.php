@@ -48,7 +48,7 @@ class PermissionResource extends Resource
 
     public static function canDelete(Model $record): bool
     {
-        return (bool) auth()->user()?->is_admin;
+        return (bool) auth()->user()?->is_admin && ! $record->roles()->exists();
     }
 
     public static function canDeleteAny(): bool

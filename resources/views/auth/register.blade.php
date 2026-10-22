@@ -2,6 +2,7 @@
 <!doctype html>
 <html lang="{{ $isEnglish ? 'en' : 'vi' }}">
 <head>
+    @include('frontend.partials.assets')
     <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ $isEnglish ? 'Create an account' : 'Tạo tài khoản' }} | {{ config('app.name') }}</title>
     @include('frontend.partials.font-preloads')

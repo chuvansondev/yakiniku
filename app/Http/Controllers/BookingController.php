@@ -12,10 +12,9 @@ use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
-use App\Mail\BookingConfirmation;
+use App\Jobs\SendBookingNotification;
 use App\Services\SettingService;
 use App\Models\Booking;
 
@@ -66,13 +65,14 @@ class BookingController extends Controller
         return view('frontend.bookings.lookup', compact('booking'));
     }
 
-    public function cancelManaged(Request $request, BookingService $bookingService, Booking $booking): RedirectResponse
+    public function cancelManaged(Request $request, BookingService $bookingService, SettingService $settings, Booking $booking): RedirectResponse
     {
         abort_unless($booking->user_id === $request->user()->id, 404);
 
-        $bookingService->cancelIfAllowed($booking);
+        $status = $bookingService->requestCancellation($booking);
+        $this->notifyAdminOfCancellationRequest($booking, $settings, $status);
 
-        return to_route('booking.mine')->with('booking_cancelled', true);
+        return to_route('booking.mine')->with($status === \App\Enums\BookingStatus::CancellationRequested ? 'booking_cancellation_requested' : 'booking_cancelled', true);
     }
 
     public function availability(Request $request, BookingService $bookingService): JsonResponse
@@ -163,8 +163,8 @@ class BookingController extends Controller
         $booking = $bookingService->create($validated);
 
         $adminEmail = config('booking.admin_email') ?: $settings->get('email');
-        $this->sendBookingEmail($booking, $booking->email, false);
-        $this->sendBookingEmail($booking, $adminEmail, true);
+        $this->queueBookingEmail($booking, $booking->email, 'confirmation', false);
+        $this->queueBookingEmail($booking, $adminEmail, 'confirmation', true);
 
         $request->session()->put('booking_id', $booking->id);
 
@@ -173,39 +173,42 @@ class BookingController extends Controller
             ->with('booking_code', $booking->booking_code);
     }
 
-    private function sendBookingEmail(\App\Models\Booking $booking, ?string $recipient, bool $isAdmin): void
+    private function queueBookingEmail(Booking $booking, ?string $recipient, string $type, bool $isAdmin): void
     {
         if (! filter_var($recipient, FILTER_VALIDATE_EMAIL)) {
             return;
         }
 
         try {
-            Mail::to($recipient)->send(new BookingConfirmation($booking->load('restaurant'), $isAdmin));
+            SendBookingNotification::dispatch($booking->id, $recipient, $type, $isAdmin);
         } catch (\Throwable $exception) {
-            Log::error('Could not send booking notification email.', [
+            Log::error('Could not queue booking notification.', [
                 'booking_id' => $booking->id,
                 'recipient' => $recipient,
+                'type' => $type,
                 'is_admin' => $isAdmin,
                 'exception' => $exception->getMessage(),
             ]);
         }
     }
 
-    public function cancel(Request $request, BookingService $bookingService): RedirectResponse
+    public function cancel(Request $request, BookingService $bookingService, SettingService $settings): RedirectResponse
     {
         $bookingId = $request->session()->get('booking_id');
 
         abort_if($bookingId === null, 404);
 
-        $bookingService->cancelIfAllowed($bookingService->find((int) $bookingId));
+        $booking = $bookingService->find((int) $bookingId);
+        $status = $bookingService->requestCancellation($booking);
+        $this->notifyAdminOfCancellationRequest($booking, $settings, $status);
 
         $request->session()->forget('booking_id');
 
         return to_route('booking.create')
-            ->with('booking_cancelled', true);
+            ->with($status === \App\Enums\BookingStatus::CancellationRequested ? 'booking_cancellation_requested' : 'booking_cancelled', true);
     }
 
-    public function cancelFromConfirmation(Request $request, BookingService $bookingService): RedirectResponse
+    public function cancelFromConfirmation(Request $request, BookingService $bookingService, SettingService $settings): RedirectResponse
     {
         $bookingId = $request->session()->get('booking_id');
         abort_if($bookingId === null, 404);
@@ -216,10 +219,37 @@ class BookingController extends Controller
         } else {
             abort_unless($booking->user_id === null, 404);
         }
-        $bookingService->cancelIfAllowed($booking);
+        $status = $bookingService->requestCancellation($booking);
+        $this->notifyAdminOfCancellationRequest($booking, $settings, $status);
 
         return to_route('booking.create')
             ->with('booking_success', true)
-            ->with('booking_cancelled', true);
+            ->with($status === \App\Enums\BookingStatus::CancellationRequested ? 'booking_cancellation_requested' : 'booking_cancelled', true);
+    }
+
+    private function notifyAdminOfCancellationRequest(Booking $booking, SettingService $settings, \App\Enums\BookingStatus $status): void
+    {
+        if ($status !== \App\Enums\BookingStatus::CancellationRequested) {
+            return;
+        }
+
+        $adminEmail = config('booking.admin_email') ?: $settings->get('email');
+        if (! filter_var($adminEmail, FILTER_VALIDATE_EMAIL)) {
+            Log::warning('Booking cancellation request could not be emailed because no valid admin email is configured.', [
+                'booking_id' => $booking->id,
+            ]);
+
+            return;
+        }
+
+        try {
+            SendBookingNotification::dispatch($booking->id, $adminEmail, 'cancellation_request');
+        } catch (\Throwable $exception) {
+            Log::error('Could not queue booking cancellation request notification.', [
+                'booking_id' => $booking->id,
+                'recipient' => $adminEmail,
+                'exception' => $exception->getMessage(),
+            ]);
+        }
     }
 }

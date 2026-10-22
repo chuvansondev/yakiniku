@@ -6,15 +6,16 @@ use App\Models\Restaurant;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
+use App\Services\PublicDataCache;
 
 class AboutController extends Controller
 {
     public function index(): View
     {
-        $restaurants = Restaurant::query()
+        $restaurants = clone PublicDataCache::remember(PublicDataCache::RESTAURANTS, 'active', fn () => Restaurant::query()
             ->where('status', true)
             ->orderBy('name')
-            ->get();
+            ->get());
 
         $restaurants->each(function (Restaurant $restaurant): void {
             $restaurant->setAttribute('page_image_url', $this->imageUrl($restaurant->image));

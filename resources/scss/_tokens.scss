@@ -1,0 +1,41 @@
+// Brand palette
+$color-brand: #a42127;
+$color-brand-dark: #7f1d1d;
+$color-brand-soft: #fdf2f2;
+$color-ink: #332a26;
+$color-muted: #75645a;
+$color-surface: #ffffff;
+$color-background: #faf7f3;
+$color-border: #eadfd5;
+$color-success: #28602d;
+$color-warning: #8b5c00;
+$color-danger: #ae3d32;
+$color-focus: #2563eb;
+
+// Spacing scale (4px base)
+$space-0: 0;
+$space-1: 4px;
+$space-2: 8px;
+$space-3: 12px;
+$space-4: 16px;
+$space-5: 20px;
+$space-6: 24px;
+$space-8: 32px;
+$space-10: 40px;
+$space-12: 48px;
+$space-16: 64px;
+
+// Corner radius
+$radius-sm: 4px;
+$radius-md: 8px;
+$radius-lg: 12px;
+$radius-xl: 16px;
+$radius-2xl: 24px;
+$radius-pill: 9999px;
+
+// Elevation and layout
+$shadow-sm: 0 2px 8px rgb(51 42 38 / 8%);
+$shadow-md: 0 8px 24px rgb(51 42 38 / 12%);
+$content-width: 1180px;
+$transition-fast: 150ms ease;
+$transition-normal: 220ms ease;
