@@ -43,7 +43,18 @@ class BookingService
             return [];
         }
 
-        $start = Carbon::createFromFormat('Y-m-d H:i', $date.' '.$time)->subMinutes(90);
+        try {
+            // Filament may dehydrate a time with seconds, while public forms use H:i.
+            // Normalize both inputs before constructing the reservation window.
+            $normalizedDate = Carbon::parse($date)->toDateString();
+            $normalizedTime = Carbon::parse($time)->format('H:i');
+            $start = Carbon::createFromFormat('!Y-m-d H:i', $normalizedDate.' '.$normalizedTime)
+                ->subMinutes(90);
+        } catch (\Throwable) {
+            throw ValidationException::withMessages([
+                'booking_time' => __('Enter a valid booking date and time.'),
+            ]);
+        }
 
         $queryStart = $start->copy()->subMinutes(180);
         $queryEnd = $start->copy()->addMinutes(180);

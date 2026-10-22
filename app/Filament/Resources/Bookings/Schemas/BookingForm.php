@@ -41,6 +41,7 @@ class BookingForm
                 DatePicker::make('booking_date')
                     ->required(),
                 TimePicker::make('booking_time')
+                    ->seconds(false)
                     ->required(),
                 TextInput::make('number_of_guests')
                     ->required()

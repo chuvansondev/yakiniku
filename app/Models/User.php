@@ -13,11 +13,14 @@ use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
+use Illuminate\Auth\MustVerifyEmail as MustVerifyEmailTrait;
 
-class User extends Authenticatable implements FilamentUser
+class User extends Authenticatable implements FilamentUser, MustVerifyEmailContract
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
+    use MustVerifyEmailTrait;
 
     /**
      * The attributes that are mass assignable.

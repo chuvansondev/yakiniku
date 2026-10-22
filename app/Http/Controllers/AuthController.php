@@ -68,6 +68,7 @@ class AuthController extends Controller
             'is_admin' => false,
         ]);
 
+        $user->sendEmailVerificationNotification();
         Auth::login($user);
         $request->session()->regenerate();
         $request->session()->put('auth_session_version', $user->session_version);

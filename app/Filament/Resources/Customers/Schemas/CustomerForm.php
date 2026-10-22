@@ -23,13 +23,7 @@ class CustomerForm
                     ->label('Email address')
                     ->email()
                     ->default(null),
-                TextInput::make('email_normalized')
-                    ->email()
-                    ->default(null),
                 TextInput::make('phone')
-                    ->tel()
-                    ->default(null),
-                TextInput::make('phone_normalized')
                     ->tel()
                     ->default(null),
                 Textarea::make('notes')
