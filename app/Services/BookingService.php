@@ -172,6 +172,7 @@ class BookingService
 
     public function create(array $validated): Booking
     {
+        $requiresAvailabilityCheck = array_key_exists('table_codes', $validated);
         $tableCodes = $validated['table_codes'] ?? [];
         $preOrderItems = $this->bookings->activePreOrderItems($validated['pre_order_items'] ?? [])
             ->map(function ($menuItem): array {
@@ -183,18 +184,20 @@ class BookingService
         unset($validated['pre_order_items'], $validated['table_codes']);
         $bookingCode = $this->generateBookingCode();
 
-        return DB::transaction(function () use ($validated, $tableCodes, $preOrderItems, $bookingCode): Booking {
-            // Serialize reservations for this restaurant before checking availability.
-            // A competing request waits here, then sees this transaction's booking.
-            Restaurant::query()
-                ->findOrFail($validated['restaurant_id'])
-                ->tables()
-                ->orderBy('id')
-                ->lockForUpdate()
-                ->get(['id']);
+        return DB::transaction(function () use ($validated, $tableCodes, $preOrderItems, $bookingCode, $requiresAvailabilityCheck): Booking {
+            if ($requiresAvailabilityCheck) {
+                // Serialize reservations for this restaurant before checking availability.
+                // A competing request waits here, then sees this transaction's booking.
+                Restaurant::query()
+                    ->findOrFail($validated['restaurant_id'])
+                    ->tables()
+                    ->orderBy('id')
+                    ->lockForUpdate()
+                    ->get(['id']);
 
-            $assignment = [...$validated, 'table_codes' => $tableCodes];
-            $this->validateTableAssignment($assignment);
+                $assignment = [...$validated, 'table_codes' => $tableCodes];
+                $this->validateTableAssignment($assignment);
+            }
 
             $customer = app(CustomerService::class)->resolve(
                 $validated['customer_name'], $validated['email'] ?? null, $validated['phone'] ?? null, Auth::id(), 'booking',
