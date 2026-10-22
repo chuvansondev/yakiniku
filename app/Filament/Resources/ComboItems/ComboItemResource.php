@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\ComboItems;
 
+use App\Filament\Resources\Concerns\UsesManagePermission;
+
 use App\Filament\Resources\ComboItems\Pages\CreateComboItem;
 use App\Filament\Resources\ComboItems\Pages\EditComboItem;
 use App\Filament\Resources\ComboItems\Pages\ListComboItems;
@@ -16,6 +18,8 @@ use Filament\Tables\Table;
 
 class ComboItemResource extends Resource
 {
+    use UsesManagePermission;
+
     protected static ?string $model = ComboItem::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;

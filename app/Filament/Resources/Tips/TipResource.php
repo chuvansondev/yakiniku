@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\Tips;
 
+use App\Filament\Resources\Concerns\UsesManagePermission;
+
 use App\Filament\Resources\Tips\Pages\CreateTip;
 use App\Filament\Resources\Tips\Pages\EditTip;
 use App\Filament\Resources\Tips\Pages\ListTips;
@@ -18,6 +20,8 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TipResource extends Resource
 {
+    use UsesManagePermission;
+
     protected static ?string $model = Tip::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;

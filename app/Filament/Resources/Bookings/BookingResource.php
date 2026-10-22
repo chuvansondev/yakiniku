@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\Bookings;
 
+use App\Filament\Resources\Concerns\UsesManagePermission;
+
 use App\Filament\Resources\Bookings\Pages\CreateBooking;
 use App\Filament\Resources\Bookings\Pages\EditBooking;
 use App\Filament\Resources\Bookings\Pages\ListBookings;
@@ -16,6 +18,8 @@ use Filament\Tables\Table;
 
 class BookingResource extends Resource
 {
+    use UsesManagePermission;
+
     protected static ?string $model = Booking::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;

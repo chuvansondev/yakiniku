@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\Combos;
 
+use App\Filament\Resources\Concerns\UsesManagePermission;
+
 use App\Filament\Resources\Combos\Pages\CreateCombo;
 use App\Filament\Resources\Combos\Pages\EditCombo;
 use App\Filament\Resources\Combos\Pages\ListCombos;
@@ -18,6 +20,8 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ComboResource extends Resource
 {
+    use UsesManagePermission;
+
     protected static ?string $model = Combo::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;

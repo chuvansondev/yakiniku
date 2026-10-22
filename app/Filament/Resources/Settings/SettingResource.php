@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\Settings;
 
+use App\Filament\Resources\Concerns\UsesManagePermission;
+
 use App\Filament\Resources\Settings\Pages\ListSettings;
 use App\Filament\Resources\Settings\Schemas\SettingForm;
 use App\Models\Setting;
@@ -12,6 +14,8 @@ use Filament\Support\Icons\Heroicon;
 
 class SettingResource extends Resource
 {
+    use UsesManagePermission;
+
     protected static ?string $model = Setting::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedSwatch;
@@ -28,12 +32,6 @@ class SettingResource extends Resource
     protected static ?string $pluralModelLabel = 'Cài đặt giao diện';
 
     protected static ?string $recordTitleAttribute = 'key';
-
-    public static function canViewAny(): bool
-    {
-        return (bool) auth()->user()?->is_admin;
-    }
-
     public static function form(Schema $schema): Schema
     {
         return SettingForm::configure($schema);

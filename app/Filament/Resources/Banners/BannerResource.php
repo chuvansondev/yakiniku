@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\Banners;
 
+use App\Filament\Resources\Concerns\UsesManagePermission;
+
 use App\Filament\Resources\Banners\Pages\CreateBanner;
 use App\Filament\Resources\Banners\Pages\EditBanner;
 use App\Filament\Resources\Banners\Pages\ListBanners;
@@ -18,6 +20,8 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class BannerResource extends Resource
 {
+    use UsesManagePermission;
+
     protected static ?string $model = Banner::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;

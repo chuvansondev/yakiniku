@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\Restaurants;
 
+use App\Filament\Resources\Concerns\UsesManagePermission;
+
 use App\Filament\Resources\Restaurants\Pages\CreateRestaurant;
 use App\Filament\Resources\Restaurants\Pages\EditRestaurant;
 use App\Filament\Resources\Restaurants\Pages\ListRestaurants;
@@ -18,6 +20,8 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class RestaurantResource extends Resource
 {
+    use UsesManagePermission;
+
     protected static ?string $model = Restaurant::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;

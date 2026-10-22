@@ -182,21 +182,36 @@ class BookingService
 
         unset($validated['pre_order_items'], $validated['table_codes']);
         $bookingCode = $this->generateBookingCode();
-        $customer = app(CustomerService::class)->resolve(
-            $validated['customer_name'], $validated['email'] ?? null, $validated['phone'] ?? null, Auth::id(), 'booking',
-        );
 
-        return DB::transaction(fn (): Booking => $this->bookings->create([
-            ...$validated,
-            'table_codes' => $tableCodes ?: null,
-            'pre_order_items' => $preOrderItems ?: null,
-            'booking_code' => $bookingCode,
-            'qr_code' => $bookingCode,
-            'status' => BookingStatus::Pending->value,
-            'create_by' => Auth::id(),
-            'user_id' => Auth::id(),
-            'customer_id' => $customer->id,
-        ]));
+        return DB::transaction(function () use ($validated, $tableCodes, $preOrderItems, $bookingCode): Booking {
+            // Serialize reservations for this restaurant before checking availability.
+            // A competing request waits here, then sees this transaction's booking.
+            Restaurant::query()
+                ->findOrFail($validated['restaurant_id'])
+                ->tables()
+                ->orderBy('id')
+                ->lockForUpdate()
+                ->get(['id']);
+
+            $assignment = [...$validated, 'table_codes' => $tableCodes];
+            $this->validateTableAssignment($assignment);
+
+            $customer = app(CustomerService::class)->resolve(
+                $validated['customer_name'], $validated['email'] ?? null, $validated['phone'] ?? null, Auth::id(), 'booking',
+            );
+
+            return $this->bookings->create([
+                ...$validated,
+                'table_codes' => $tableCodes ?: null,
+                'pre_order_items' => $preOrderItems ?: null,
+                'booking_code' => $bookingCode,
+                'qr_code' => $bookingCode,
+                'status' => BookingStatus::Pending->value,
+                'create_by' => Auth::id(),
+                'user_id' => Auth::id(),
+                'customer_id' => $customer->id,
+            ]);
+        });
     }
 
     public function update(Booking $booking, array $attributes): Booking

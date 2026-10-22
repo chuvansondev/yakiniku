@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\Recipes;
 
+use App\Filament\Resources\Concerns\UsesManagePermission;
+
 use App\Filament\Resources\Recipes\Pages\CreateRecipe;
 use App\Filament\Resources\Recipes\Pages\EditRecipe;
 use App\Filament\Resources\Recipes\Pages\ListRecipes;
@@ -18,6 +20,8 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class RecipeResource extends Resource
 {
+    use UsesManagePermission;
+
     protected static ?string $model = Recipe::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;

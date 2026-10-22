@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\KidItems;
 
+use App\Filament\Resources\Concerns\UsesManagePermission;
+
 use App\Filament\Resources\KidItems\Pages\CreateKidItem;
 use App\Filament\Resources\KidItems\Pages\EditKidItem;
 use App\Filament\Resources\KidItems\Pages\ListKidItems;
@@ -18,6 +20,8 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class KidItemResource extends Resource
 {
+    use UsesManagePermission;
+
     protected static ?string $model = KidItem::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;

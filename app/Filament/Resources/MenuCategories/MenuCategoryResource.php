@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\MenuCategories;
 
+use App\Filament\Resources\Concerns\UsesManagePermission;
+
 use App\Filament\Resources\MenuCategories\Pages\CreateMenuCategory;
 use App\Filament\Resources\MenuCategories\Pages\EditMenuCategory;
 use App\Filament\Resources\MenuCategories\Pages\ListMenuCategories;
@@ -18,6 +20,8 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class MenuCategoryResource extends Resource
 {
+    use UsesManagePermission;
+
     protected static ?string $model = MenuCategory::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;

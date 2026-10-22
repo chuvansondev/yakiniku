@@ -41,7 +41,7 @@ Route::get('/our-secret/recipes', [RecipeController::class, 'index'])->name('sec
 Route::get('/our-secret/tips', [TipController::class, 'index'])->name('secret.tips');
 Route::get('/about', [AboutController::class, 'index'])->name('about');
 Route::get('/booking', [BookingController::class, 'create'])->name('booking.create');
-Route::post('/booking', [BookingController::class, 'store'])->name('booking.store');
+Route::post('/booking', [BookingController::class, 'store'])->middleware('throttle:5,1')->name('booking.store');
 Route::get('/booking/availability', [BookingController::class, 'availability'])->name('booking.availability');
 Route::post('/booking/cancel', [BookingController::class, 'cancelFromConfirmation'])->name('booking.cancel-confirmation');
 
