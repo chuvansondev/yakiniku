@@ -211,6 +211,11 @@ class BookingController extends Controller
         abort_if($bookingId === null, 404);
 
         $booking = $bookingService->find((int) $bookingId);
+        if ($request->user()) {
+            abort_unless($booking->user_id === $request->user()->id, 404);
+        } else {
+            abort_unless($booking->user_id === null, 404);
+        }
         $bookingService->cancelIfAllowed($booking);
 
         return to_route('booking.create')

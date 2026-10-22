@@ -22,4 +22,7 @@ interface BookingRepositoryInterface
     public function mustTryMenuItems(): Collection;
 
     public function updateStatus(Booking $booking, string $status): void;
+
+    /** @param array<string, mixed> $attributes */
+    public function updateBooking(Booking $booking, array $attributes): Booking;
 }

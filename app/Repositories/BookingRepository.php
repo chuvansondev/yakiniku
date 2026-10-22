@@ -7,7 +7,9 @@ use App\Models\MenuItem;
 use App\Models\Restaurant;
 use App\Contracts\Repositories\BookingRepositoryInterface;
 use App\Repositories\Contracts\BookingRepositoryContract;
+use App\Repositories\Contracts\BookingStatusHistoryRepositoryContract;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 
 class BookingRepository extends EloquentRepository implements BookingRepositoryContract, BookingRepositoryInterface
 {
@@ -28,7 +30,12 @@ class BookingRepository extends EloquentRepository implements BookingRepositoryC
 
     public function create(array $attributes): Booking
     {
-        return Booking::query()->create($attributes);
+        return DB::transaction(function () use ($attributes): Booking {
+            $booking = Booking::query()->create($attributes);
+            $this->recordStatusChange($booking, null, (string) $booking->status);
+
+            return $booking;
+        });
     }
 
     public function bookingCodeExists(string $code): bool
@@ -57,6 +64,43 @@ class BookingRepository extends EloquentRepository implements BookingRepositoryC
 
     public function updateStatus(Booking $booking, string $status): void
     {
-        $booking->update(['status' => $status]);
+        if ($booking->status === $status) {
+            return;
+        }
+
+        DB::transaction(function () use ($booking, $status): void {
+            $fromStatus = (string) $booking->status;
+            $booking->update(['status' => $status]);
+            $this->recordStatusChange($booking, $fromStatus, $status);
+        });
+    }
+
+    public function updateBooking(Booking $booking, array $attributes): Booking
+    {
+        return DB::transaction(function () use ($booking, $attributes): Booking {
+            $fromStatus = (string) $booking->status;
+            $booking->fill($attributes)->save();
+
+            if (array_key_exists('status', $attributes) && $fromStatus !== (string) $booking->status) {
+                $this->recordStatusChange($booking, $fromStatus, (string) $booking->status);
+            }
+
+            return $booking;
+        });
+    }
+
+    private function recordStatusChange(Booking $booking, ?string $fromStatus, string $toStatus): void
+    {
+        $actor = auth()->user();
+
+        app(BookingStatusHistoryRepositoryContract::class)->createForBooking($booking, [
+            'from_status' => $fromStatus,
+            'to_status' => $toStatus,
+            'changed_by' => auth()->id(),
+            'changed_by_name' => $actor?->name ?? 'System',
+            'source' => $actor?->is_admin ? 'admin' : ($actor ? 'customer' : 'system'),
+            'change_type' => $fromStatus === null ? 'created' : 'status_change',
+            'changed_at' => now(),
+        ]);
     }
 }

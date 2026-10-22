@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\DB;
 
 class BookingService
 {
@@ -44,9 +45,13 @@ class BookingService
 
         $start = Carbon::createFromFormat('Y-m-d H:i', $date.' '.$time)->subMinutes(90);
 
+        $queryStart = $start->copy()->subMinutes(180);
+        $queryEnd = $start->copy()->addMinutes(180);
+
         return Booking::query()
             ->where('restaurant_id', $restaurantId)
             ->whereNotIn('status', [BookingStatus::Cancelled->value])
+            ->whereBetween('booking_date', [$queryStart->toDateString(), $queryEnd->toDateString()])
             ->when($excludeBookingId, fn ($query) => $query->whereKeyNot($excludeBookingId))
             ->get(['booking_date', 'booking_time', 'table_codes'])
             ->filter(function (Booking $booking) use ($start): bool {
@@ -101,7 +106,9 @@ class BookingService
         $customer = $customers->resolve($attributes['customer_name'], $attributes['email'] ?? null, $attributes['phone'] ?? null, null, 'booking');
         $attributes['customer_id'] = $customer->id;
 
-        return $booking->update($attributes);
+        $this->bookings->updateBooking($booking, $attributes);
+
+        return true;
     }
 
     public function validateTableAssignment(array $attributes, ?int $excludeBookingId = null): void
@@ -179,7 +186,7 @@ class BookingService
             $validated['customer_name'], $validated['email'] ?? null, $validated['phone'] ?? null, Auth::id(), 'booking',
         );
 
-        return $this->bookings->create([
+        return DB::transaction(fn (): Booking => $this->bookings->create([
             ...$validated,
             'table_codes' => $tableCodes ?: null,
             'pre_order_items' => $preOrderItems ?: null,
@@ -189,7 +196,47 @@ class BookingService
             'create_by' => Auth::id(),
             'user_id' => Auth::id(),
             'customer_id' => $customer->id,
-        ]);
+        ]));
+    }
+
+    public function update(Booking $booking, array $attributes): Booking
+    {
+        $scheduleFields = ['restaurant_id', 'floor', 'table_codes', 'booking_date', 'booking_time', 'number_of_guests'];
+        $scheduleChanged = collect($scheduleFields)->contains(function (string $field) use ($attributes, $booking): bool {
+            if (! array_key_exists($field, $attributes)) {
+                return false;
+            }
+
+            $current = match ($field) {
+                'booking_date' => $booking->booking_date?->format('Y-m-d'),
+                'booking_time' => substr((string) $booking->booking_time, 0, 5),
+                'table_codes' => array_values($booking->table_codes ?? []),
+                default => $booking->{$field},
+            };
+            $incoming = $field === 'table_codes'
+                ? array_values($attributes[$field] ?? [])
+                : (string) $attributes[$field];
+
+            return $field === 'table_codes'
+                ? $current !== $incoming
+                : (string) $current !== (string) $incoming;
+        });
+
+        if ($scheduleChanged && ($booking->table_codes || array_key_exists('table_codes', $attributes))) {
+            $assignment = array_merge([
+                'restaurant_id' => $booking->restaurant_id,
+                'floor' => $booking->floor ?? 1,
+                'table_codes' => $booking->table_codes ?? [],
+                'booking_date' => $booking->booking_date?->format('Y-m-d'),
+                'booking_time' => substr((string) $booking->booking_time, 0, 5),
+                'number_of_guests' => $booking->number_of_guests,
+                'status' => $booking->status,
+            ], $attributes);
+            $assignment['table_codes'] = array_values($assignment['table_codes'] ?? []);
+            $this->validateTableAssignment($assignment, $booking->id);
+        }
+
+        return $this->bookings->updateBooking($booking, $attributes);
     }
 
     public function cancelIfAllowed(Booking $booking): void
