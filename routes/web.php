@@ -25,7 +25,7 @@ Route::middleware('guest')->group(function (): void {
     Route::post('/register', [AuthController::class, 'register'])->name('register.store');
 });
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
-Route::post('/leads', [LeadController::class, 'store'])->name('leads.store');
+Route::post('/leads', [LeadController::class, 'store'])->middleware('throttle:5,1')->name('leads.store');
 Route::get('/my-bookings', [BookingController::class, 'myBookings'])->middleware(['auth', 'active'])->name('booking.mine');
 Route::post('/my-bookings/{booking}/cancel', [BookingController::class, 'cancelManaged'])
     ->middleware(['auth', 'active'])->name('booking.mine.cancel');

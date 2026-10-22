@@ -43,10 +43,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('banners', function (Blueprint $table) {
-            $table->dropSoftDeletes();
-            $table->dropForeign(['delete_by']);
-            $table->dropColumn(['delete_by']);
-        });
+        Schema::dropIfExists('banners');
     }
 };

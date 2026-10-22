@@ -11,7 +11,7 @@ class Banner extends Model
 {
     use SoftDeletes, TracksDeletion, GeneratesSortOrder;
 
-    public const DELETED_AT = 'delete_at';
+    public const DELETED_AT = 'deleted_at';
 
     protected $fillable = [
         'title',

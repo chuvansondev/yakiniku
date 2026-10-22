@@ -12,6 +12,8 @@ class AccountManagementPermissionSeeder extends Seeder
     /** @var array<string, string> */
     private const PERMISSIONS = [
         'admin.dashboard.view' => 'View the admin dashboard.',
+        'admin.accounts.view' => 'View user accounts.',
+        'admin.accounts.create' => 'Create user accounts.',
         'accounts.manage' => 'Create, update, lock and unlock user accounts.',
         'menu.categories.manage' => 'Manage menu categories.',
         'menu.items.manage' => 'Manage menu items.',
