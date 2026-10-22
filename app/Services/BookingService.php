@@ -49,7 +49,7 @@ class BookingService
             $normalizedDate = Carbon::parse($date)->toDateString();
             $normalizedTime = Carbon::parse($time)->format('H:i');
             $start = Carbon::createFromFormat('!Y-m-d H:i', $normalizedDate.' '.$normalizedTime)
-                ->subMinutes(90);
+                ->subMinutes(15);
         } catch (\Throwable) {
             throw ValidationException::withMessages([
                 'booking_time' => __('Enter a valid booking date and time.'),
@@ -64,12 +64,18 @@ class BookingService
             ->whereNotIn('status', [BookingStatus::Cancelled->value])
             ->whereBetween('booking_date', [$queryStart->toDateString(), $queryEnd->toDateString()])
             ->when($excludeBookingId, fn ($query) => $query->whereKeyNot($excludeBookingId))
-            ->get(['booking_date', 'booking_time', 'table_codes'])
+            ->get(['booking_date', 'booking_time', 'table_codes', 'status', 'completed_at'])
             ->filter(function (Booking $booking) use ($start): bool {
                 $bookingDate = Carbon::parse($booking->getRawOriginal('booking_date'))->toDateString();
                 $bookingTime = substr((string) $booking->getRawOriginal('booking_time'), 0, 8);
                 $existingStart = Carbon::parse($bookingDate.' '.$bookingTime);
                 $existingEnd = $existingStart->copy()->addMinutes(180);
+                if ($booking->status === BookingStatus::Completed->value && $booking->completed_at) {
+                    $completedAt = Carbon::parse($booking->completed_at);
+                    if ($completedAt->lt($existingEnd)) {
+                        $existingEnd = $completedAt;
+                    }
+                }
 
                 return $existingStart->lt($start->copy()->addMinutes(180)) && $existingEnd->gt($start);
             })

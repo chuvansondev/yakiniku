@@ -34,6 +34,7 @@ class Booking extends Model
         'floor' => 'integer',
         'table_codes' => 'array',
         'pre_order_items' => 'array',
+        'completed_at' => 'datetime',
     ];
 
     public function restaurant(): BelongsTo

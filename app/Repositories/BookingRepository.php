@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\Booking;
 use App\Models\MenuItem;
 use App\Models\Restaurant;
+use App\Enums\BookingStatus;
 use App\Contracts\Repositories\BookingRepositoryInterface;
 use App\Repositories\Contracts\BookingRepositoryContract;
 use App\Repositories\Contracts\BookingStatusHistoryRepositoryContract;
@@ -31,6 +32,10 @@ class BookingRepository extends EloquentRepository implements BookingRepositoryC
     public function create(array $attributes): Booking
     {
         return DB::transaction(function () use ($attributes): Booking {
+            if (($attributes['status'] ?? null) === BookingStatus::Completed->value) {
+                $attributes['completed_at'] ??= now();
+            }
+
             $booking = Booking::query()->create($attributes);
             $this->recordStatusChange($booking, null, (string) $booking->status);
 
@@ -70,6 +75,7 @@ class BookingRepository extends EloquentRepository implements BookingRepositoryC
 
         DB::transaction(function () use ($booking, $status): void {
             $fromStatus = (string) $booking->status;
+            $booking->completed_at = $status === BookingStatus::Completed->value ? now() : null;
             $booking->update(['status' => $status]);
             $this->recordStatusChange($booking, $fromStatus, $status);
         });
@@ -79,6 +85,9 @@ class BookingRepository extends EloquentRepository implements BookingRepositoryC
     {
         return DB::transaction(function () use ($booking, $attributes): Booking {
             $fromStatus = (string) $booking->status;
+            if (array_key_exists('status', $attributes) && $fromStatus !== (string) $attributes['status']) {
+                $booking->completed_at = $attributes['status'] === BookingStatus::Completed->value ? now() : null;
+            }
             $booking->fill($attributes)->save();
 
             if (array_key_exists('status', $attributes) && $fromStatus !== (string) $booking->status) {
