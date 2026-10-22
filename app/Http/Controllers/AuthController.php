@@ -43,7 +43,7 @@ class AuthController extends Controller
         $request->session()->regenerate();
         $request->session()->put('auth_session_version', $user->session_version);
 
-        return redirect()->intended(route('home'));
+        return redirect()->intended(route('booking.mine'));
     }
 
     public function showRegister()
@@ -57,12 +57,14 @@ class AuthController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'confirmed', PasswordRule::min(8)],
+            'phone' => ['nullable', 'string', 'max:30'],
         ]);
 
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => $data['password'],
+            'phone' => $data['phone'] ?? null,
             'is_admin' => false,
         ]);
 
@@ -70,7 +72,7 @@ class AuthController extends Controller
         $request->session()->regenerate();
         $request->session()->put('auth_session_version', $user->session_version);
 
-        return redirect()->intended(route('home'));
+        return redirect()->intended(route('booking.mine'));
     }
 
     public function logout(Request $request)

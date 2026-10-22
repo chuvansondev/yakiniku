@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use chillerlan\QRCode\QRCode;
+use chillerlan\QRCode\QROptions;
 use App\Services\BookingService;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\BookingRequest;
@@ -12,6 +14,7 @@ use Illuminate\View\View;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use App\Mail\BookingConfirmation;
 use App\Services\SettingService;
 use App\Models\Booking;
@@ -65,15 +68,11 @@ class BookingController extends Controller
 
     public function cancelManaged(Request $request, BookingService $bookingService, Booking $booking): RedirectResponse
     {
-        $isOwner = $request->user() && $booking->user_id === $request->user()->id;
-        $isLookupOwner = (int) $request->session()->get('looked_up_booking_id') === $booking->id;
-        abort_unless($isOwner || $isLookupOwner, 404);
+        abort_unless($booking->user_id === $request->user()->id, 404);
 
         $bookingService->cancelIfAllowed($booking);
 
-        return $request->user()
-            ? to_route('booking.mine')->with('booking_cancelled', true)
-            : to_route('booking.lookup.result')->with('booking_cancelled', true);
+        return to_route('booking.mine')->with('booking_cancelled', true);
     }
 
     public function availability(Request $request, BookingService $bookingService): JsonResponse
@@ -98,7 +97,7 @@ class BookingController extends Controller
         ]);
     }
 
-    public function create(BookingService $bookingService): View
+    public function create(BookingService $bookingService): Response
     {
         $restaurants = $bookingService->formRestaurants();
         $mustTryMenuItems = $bookingService->mustTryMenuItems();
@@ -112,6 +111,7 @@ class BookingController extends Controller
         }
 
         $selectedRestaurantId = old('restaurant_id') ?: $restaurants->first()?->id;
+        $customer = auth()->user();
         $tables = $bookingService->tablesForRestaurant($selectedRestaurantId);
         $tableCapacities = $tables->pluck('capacity', 'code')->all();
         $tableFloors = $tables->pluck('floor', 'code')->all();
@@ -123,15 +123,33 @@ class BookingController extends Controller
         $unavailableTables = $bookingService->unavailableTables(
             $selectedRestaurantId, old('booking_date'), old('booking_time')
         );
+        $bookingQr = $booking
+            ? (new QRCode(new QROptions(['outputType' => QRCode::OUTPUT_MARKUP_SVG, 'scale' => 5])))->render($booking->booking_code)
+            : null;
 
-        return view('frontend.bookings.create', compact('booking', 'maximumFloorCapacity', 'mustTryMenuItems', 'restaurants', 'tableCapacities', 'tableFloors', 'unavailableTables'));
+        return response()
+            ->view('frontend.bookings.create', compact('booking', 'bookingQr', 'customer', 'maximumFloorCapacity', 'mustTryMenuItems', 'restaurants', 'tables', 'tableCapacities', 'tableFloors', 'unavailableTables', 'selectedRestaurantId'))
+            ->header('Cache-Control', 'no-store, no-cache, must-revalidate, private')
+            ->header('Pragma', 'no-cache')
+            ->header('Expires', '0');
     }
 
     public function store(BookingRequest $request, BookingService $bookingService, SettingService $settings): RedirectResponse
     {
         $validated = $request->validated();
+        if ($request->user()) {
+            $validated['customer_name'] = $request->user()->name;
+            $validated['email'] = $request->user()->email;
 
-        if ($error = $bookingService->tableSelectionError($validated['number_of_guests'], $validated['table_codes'] ?? [], $validated['floor'], $validated['restaurant_id'])) {
+            if (filled($validated['phone'] ?? null)) {
+                $request->user()->forceFill(['phone' => $validated['phone']])->save();
+            }
+        }
+        $tableFloors = $bookingService->tableFloors((int) $validated['restaurant_id']);
+        $selectedFloors = collect($validated['table_codes'])->map(fn (string $code) => $tableFloors[$code] ?? null)->filter()->unique()->values();
+        $validated['floor'] = (int) ($selectedFloors->first() ?? 1);
+
+        if ($error = $bookingService->tableSelectionError($validated['number_of_guests'], $validated['table_codes'] ?? [], $validated['floor'], $validated['restaurant_id'], false)) {
             throw ValidationException::withMessages(['table_codes' => $error]);
         }
 
@@ -184,6 +202,19 @@ class BookingController extends Controller
         $request->session()->forget('booking_id');
 
         return to_route('booking.create')
+            ->with('booking_cancelled', true);
+    }
+
+    public function cancelFromConfirmation(Request $request, BookingService $bookingService): RedirectResponse
+    {
+        $bookingId = $request->session()->get('booking_id');
+        abort_if($bookingId === null, 404);
+
+        $booking = $bookingService->find((int) $bookingId);
+        $bookingService->cancelIfAllowed($booking);
+
+        return to_route('booking.create')
+            ->with('booking_success', true)
             ->with('booking_cancelled', true);
     }
 }

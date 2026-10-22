@@ -84,7 +84,6 @@ class MenuController extends Controller
         $typeLabels = [
             KidsItemType::Food->value => $request->getLocale() === 'en' ? 'Food' : 'Món ăn',
             KidsItemType::Utensil->value => $request->getLocale() === 'en' ? 'Utensils' : 'Dụng cụ',
-            KidsItemType::Supply->value => $request->getLocale() === 'en' ? 'Supplies' : 'Đồ dùng',
         ];
         $categoryLabels = [
             KidsFoodCategory::Meat->value => $request->getLocale() === 'en' ? 'Meat' : 'Thịt',

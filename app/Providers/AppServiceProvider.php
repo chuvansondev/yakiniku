@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\User;
+use App\Policies\UserPolicy;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -13,6 +16,8 @@ class AppServiceProvider extends ServiceProvider
     {
         $repositories = [
             \App\Contracts\Repositories\SettingRepositoryInterface::class => \App\Repositories\SettingRepository::class,
+            \App\Contracts\Repositories\BookingRepositoryInterface::class => \App\Repositories\BookingRepository::class,
+            \App\Contracts\Repositories\LeadRepositoryInterface::class => \App\Repositories\LeadRepository::class,
             \App\Repositories\Contracts\BannerRepositoryContract::class => \App\Repositories\BannerRepository::class,
             \App\Repositories\Contracts\BookingRepositoryContract::class => \App\Repositories\BookingRepository::class,
             \App\Repositories\Contracts\BookingStatusHistoryRepositoryContract::class => \App\Repositories\BookingStatusHistoryRepository::class,
@@ -44,6 +49,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Gate::policy(User::class, UserPolicy::class);
     }
 }

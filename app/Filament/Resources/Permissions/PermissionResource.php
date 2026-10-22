@@ -20,6 +20,12 @@ class PermissionResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
+    protected static string|\UnitEnum|null $navigationGroup = 'Hệ thống';
+
+    protected static ?string $navigationLabel = 'Quyền';
+
+    protected static ?int $navigationSort = 3;
+
     protected static ?string $recordTitleAttribute = 'Permission';
 
     public static function form(Schema $schema): Schema

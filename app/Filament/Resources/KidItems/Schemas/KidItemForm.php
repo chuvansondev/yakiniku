@@ -29,12 +29,19 @@ class KidItemForm
                 Select::make('type')
                     ->options([
                         'food' => 'Food',
-                        'drink' => 'Drink',
+                        'utensil' => 'Utensil',
                     ])
-                    ->default('food')
                     ->required(),
-                TextInput::make('food_category')
-                    ->maxLength(255),
+                Select::make('food_category')
+                    ->options([
+                        'meat' => 'Thịt',
+                        'side_dish' => 'Món ăn kèm',
+                        'vegetable' => 'Rau củ',
+                        'soup' => 'Súp',
+                        'rice_noodles' => 'Cơm và mì',
+                        'dessert' => 'Tráng miệng',
+                    ])
+                    ->nullable(),
                 Textarea::make('description')
                     ->columnSpanFull(),
                 Textarea::make('description_en')

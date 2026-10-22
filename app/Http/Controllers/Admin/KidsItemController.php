@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Enums\KidsFoodCategory;
 use App\Enums\KidsItemType;
 use App\Http\Controllers\Controller;
-use App\Models\KidsItem;
+use App\Models\KidItem;
 use App\Services\AdminResourceService;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\Admin\KidsItemRequest;
@@ -16,7 +16,6 @@ class KidsItemController extends Controller
     private const TYPE_LABELS = [
         KidsItemType::Food->value => 'Đồ ăn',
         KidsItemType::Utensil->value => 'Dụng cụ',
-        KidsItemType::Supply->value => 'Đồ dùng',
     ];
 
     private const FOOD_CATEGORY_LABELS = [
@@ -30,7 +29,7 @@ class KidsItemController extends Controller
 
     public function index(\Illuminate\Http\Request $request, AdminResourceService $resources): View
     {
-        $items = $resources->paginate(KidsItem::class, $request, orderBy: [['type', 'asc'], ['sort_order', 'asc'], ['name', 'asc']]);
+        $items = $resources->paginate(KidItem::class, $request, orderBy: [['type', 'asc'], ['sort_order', 'asc'], ['name', 'asc']]);
 
         return view('admin.kids-items.index', [
             'items' => $items,
@@ -59,23 +58,23 @@ class KidsItemController extends Controller
         $validated['sort_order'] = $validated['sort_order'] ?? null;
         $validated['status'] = $request->boolean('status');
 
-        $resources->create(KidsItem::class, $validated);
+        $resources->create(KidItem::class, $validated);
 
         return redirect()
             ->route('admin.kids-items.index')
             ->with('success', 'Thêm nội dung trẻ em thành công.');
     }
 
-    public function edit(KidsItem $kidsItem): View
+    public function edit(KidItem $kidItem): View
     {
         return view('admin.kids-items.edit', [
-            'kidsItem' => $kidsItem,
+            'kidItem' => $kidItem,
             'typeLabels' => self::TYPE_LABELS,
             'foodCategoryLabels' => self::FOOD_CATEGORY_LABELS,
         ]);
     }
 
-    public function update(KidsItemRequest $request, KidsItem $kidsItem, AdminResourceService $resources): RedirectResponse
+    public function update(KidsItemRequest $request, KidItem $kidItem, AdminResourceService $resources): RedirectResponse
     {
         $validated = $request->validated();
         $oldImage = null;
@@ -83,11 +82,11 @@ class KidsItemController extends Controller
         $validated['slug'] = $resources->slug(($validated['slug'] ?? null) ?: $validated['name']);
 
         if ($request->hasFile('image')) {
-            $oldImage = $kidsItem->image;
-            $validated['image'] = $resources->replaceImage($request->file('image'), false, $kidsItem->image, 'kids/items');
+            $oldImage = $kidItem->image;
+            $validated['image'] = $resources->replaceImage($request->file('image'), false, $kidItem->image, 'kids/items');
         } elseif ($request->boolean('remove_image')) {
-            $oldImage = $kidsItem->image;
-            $validated['image'] = $resources->replaceImage(null, true, $kidsItem->image, 'kids/items');
+            $oldImage = $kidItem->image;
+            $validated['image'] = $resources->replaceImage(null, true, $kidItem->image, 'kids/items');
         } else {
             unset($validated['image']);
         }
@@ -99,7 +98,7 @@ class KidsItemController extends Controller
         $validated['sort_order'] = $validated['sort_order'] ?? null;
         $validated['status'] = $request->boolean('status');
 
-        $resources->update($kidsItem, $validated);
+        $resources->update($kidItem, $validated);
         $resources->deleteImage($oldImage);
 
         return redirect()
@@ -107,9 +106,9 @@ class KidsItemController extends Controller
             ->with('success', 'Cập nhật nội dung trẻ em thành công.');
     }
 
-    public function destroy(KidsItem $kidsItem, AdminResourceService $resources): RedirectResponse
+    public function destroy(KidItem $kidItem, AdminResourceService $resources): RedirectResponse
     {
-        $resources->delete($kidsItem);
+        $resources->delete($kidItem);
 
         return redirect()
             ->route('admin.kids-items.index')

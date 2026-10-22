@@ -22,6 +22,12 @@ class BannerResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
+    protected static string|\UnitEnum|null $navigationGroup = 'Nội dung';
+
+    protected static ?string $navigationLabel = 'Banner';
+
+    protected static ?int $navigationSort = 2;
+
     protected static ?string $recordTitleAttribute = 'Banner';
 
     public static function form(Schema $schema): Schema

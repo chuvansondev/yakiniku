@@ -20,6 +20,12 @@ class ComboItemResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
+    protected static string|\UnitEnum|null $navigationGroup = 'Thực đơn';
+
+    protected static ?string $navigationLabel = 'Món trong combo';
+
+    protected static ?int $navigationSort = 4;
+
     protected static ?string $recordTitleAttribute = 'Combo Item';
 
     public static function form(Schema $schema): Schema

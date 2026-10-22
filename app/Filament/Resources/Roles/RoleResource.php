@@ -20,6 +20,12 @@ class RoleResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
+    protected static string|\UnitEnum|null $navigationGroup = 'Hệ thống';
+
+    protected static ?string $navigationLabel = 'Vai trò';
+
+    protected static ?int $navigationSort = 2;
+
     protected static ?string $recordTitleAttribute = 'Role';
 
     public static function form(Schema $schema): Schema

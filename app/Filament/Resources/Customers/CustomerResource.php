@@ -20,6 +20,15 @@ class CustomerResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
+    protected static string|\UnitEnum|null $navigationGroup = 'Đặt bàn & khách hàng';
+
+    protected static ?string $navigationLabel = 'Khách hàng';
+
+    protected static ?int $navigationSort = 2;
+
+
+
+
     protected static ?string $recordTitleAttribute = 'Customer';
 
     public static function form(Schema $schema): Schema

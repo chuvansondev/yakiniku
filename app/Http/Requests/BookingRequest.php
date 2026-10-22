@@ -17,16 +17,23 @@ class BookingRequest extends FormRequest
             ? app(BookingService::class)->tableCapacities((int) $restaurantId)
             : [];
 
+        if ($this->user()) {
+            $this->merge([
+                'customer_name' => $this->user()->name,
+                'email' => $this->user()->email,
+            ]);
+        }
+
         return [
             'restaurant_id' => ['required', 'integer', Rule::exists('restaurants', 'id')->where('status', true)],
-            'floor' => ['required', 'integer', 'min:1', 'max:20'],
             'customer_name' => ['required', 'string', 'max:255'],
             'phone' => ['required', 'string', 'max:30'],
-            'email' => ['nullable', 'email', 'max:255'],
+            'email' => ['required', 'email', 'max:255'],
             'booking_date' => ['required', 'date', 'after_or_equal:today'],
             'booking_time' => ['required', 'date_format:H:i'],
             'number_of_guests' => ['required', 'integer', 'between:1,100'],
-            'table_codes' => ['nullable', 'array'],
+            'terms_accepted' => ['accepted'],
+            'table_codes' => ['required', 'array', 'min:1'],
             'table_codes.*' => ['string', 'distinct', Rule::in(array_keys($tableCodes))],
             'note' => ['nullable', 'string', 'max:2000'],
             'pre_order_items' => ['nullable', 'array'],

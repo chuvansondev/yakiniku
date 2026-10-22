@@ -64,7 +64,10 @@
     .site-header__link::after { position: absolute; right: 0; bottom: 1px; left: 0; height: 2px; background: #a42127; content: ''; transform: scaleX(0); transform-origin: left; transition: transform .18s ease; }
     .site-header__link:hover, .site-header__link.is-active { color: #a42127; }
     .site-header__link:hover::after, .site-header__link.is-active::after { transform: scaleX(1); }
-    .site-header__controls { display: flex; grid-column: 3; grid-row: 1; justify-self: end; align-items: center; }
+    .site-header__controls { display: flex; grid-column: 3; grid-row: 1; justify-self: end; align-items: center; gap: 12px; }
+    .site-header__account { display:flex; align-items:center; gap:10px; color:#65534a; font-size:14px; white-space:nowrap; }
+    .site-header__account a { color:#8f2527; text-decoration:none; font-weight:700; }
+    .site-header__account button { padding:0; border:0; background:none; color:#8f2527; font:inherit; cursor:pointer; }
     .site-header__locale { display: inline-flex; align-items: center; gap: 4px; padding: 5px; border: 1px solid rgba(73, 59, 53, .22); border-radius: 3px; }
     .site-header__locale button { min-width: 48px; padding: 8px 10px; border: 0; border-radius: 2px; background: transparent; color: #594c45; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; transition: background .18s ease, color .18s ease; }
     .site-header__locale button:hover { background: #f4eeea; }
@@ -96,6 +99,7 @@
         .site-header__locale button { min-width: 39px; padding: 7px 6px; font-size: 12px; }
         .site-header__toggle-label { width: 38px; height: 38px; }
     }
+    @media (max-width: 980px) { .site-header__account { white-space:normal; } }
 </style>
 
 @php
@@ -140,6 +144,15 @@
         </a>
 
         <div class="site-header__controls">
+            <div class="site-header__account">
+                @auth
+                    <a href="{{ route('booking.mine') }}">{{ app()->getLocale() === 'en' ? 'My bookings' : 'Đặt bàn của tôi' }}</a>
+                    <form method="POST" action="{{ route('logout') }}">@csrf<button type="submit">{{ app()->getLocale() === 'en' ? 'Sign out' : 'Đăng xuất' }}</button></form>
+                @else
+                    <a href="{{ route('login') }}">{{ app()->getLocale() === 'en' ? 'Sign in' : 'Đăng nhập' }}</a>
+                    <a href="{{ route('register') }}">{{ app()->getLocale() === 'en' ? 'Register' : 'Đăng ký' }}</a>
+                @endauth
+            </div>
             <form class="site-header__locale" method="POST" action="{{ route('locale.update') }}" aria-label="{{ app()->getLocale() === 'vi' ? 'Chọn ngôn ngữ' : 'Choose language' }}">
                 @csrf
                 <button type="submit" name="locale" value="vi" lang="vi" class="{{ app()->getLocale() === 'vi' ? 'is-active' : '' }}" aria-pressed="{{ app()->getLocale() === 'vi' ? 'true' : 'false' }}">VIE</button>

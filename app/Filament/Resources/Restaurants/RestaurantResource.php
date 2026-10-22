@@ -22,6 +22,11 @@ class RestaurantResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
+    protected static string|\UnitEnum|null $navigationGroup = 'Đặt bàn & khách hàng';
+
+    protected static ?string $navigationLabel = 'Cơ sở kinh doanh';
+    protected static ?int $navigationSort = 5;
+
     protected static ?string $recordTitleAttribute = 'Restaurant';
 
     public static function form(Schema $schema): Schema

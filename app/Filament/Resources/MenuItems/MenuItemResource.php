@@ -22,6 +22,12 @@ class MenuItemResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
+    protected static string|\UnitEnum|null $navigationGroup = 'Thực đơn';
+
+    protected static ?string $navigationLabel = 'Món ăn';
+
+    protected static ?int $navigationSort = 2;
+
     protected static ?string $recordTitleAttribute = 'Menu Item';
 
     public static function form(Schema $schema): Schema

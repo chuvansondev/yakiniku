@@ -22,6 +22,12 @@ class ComboResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
+    protected static string|\UnitEnum|null $navigationGroup = 'Thực đơn';
+
+    protected static ?string $navigationLabel = 'Combo';
+
+    protected static ?int $navigationSort = 3;
+
     protected static ?string $recordTitleAttribute = 'Combo';
 
     public static function form(Schema $schema): Schema

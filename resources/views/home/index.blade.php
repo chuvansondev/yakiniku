@@ -14,7 +14,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ setting('header_brand_name'.($isEnglish ? '_en' : '')) ?: config('app.name') }}</title>
-    @include('frontend.partials.font-preloads')
+    <link rel="preload" href="{{ asset('fonts/UTM%20BryantLG.woff2') }}" as="font" type="font/woff2" crossorigin fetchpriority="high">
+    <link rel="preload" href="{{ asset('fonts/UTM%20BryantLG_B.woff2') }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ asset('fonts/UTM-Pacific-Standard.woff2') }}" as="font" type="font/woff2" crossorigin>
     <style>
         @font-face {
             font-family: 'UTM BryantLG';
@@ -143,7 +145,7 @@
                     @php
                         $bannerImage = $banner->homepage_image_url ?: $imageUrl($banner->image);
                     @endphp
-                    <article class="home-hero__slide {{ $loop->first ? 'is-active' : '' }}" @if($bannerImage) style="background-image:url('{{ $bannerImage }}')" @endif>
+                    <article class="home-hero__slide {{ $loop->first ? 'is-active' : '' }}" @if($bannerImage) @if($loop->first) style="background-image:url('{{ $bannerImage }}')" @else data-background-image="{{ $bannerImage }}" @endif @endif>
                     </article>
                 @empty
                     <article class="home-hero__slide is-active">
@@ -154,9 +156,9 @@
                 <h1 class="home-hero__brand">{{ $homeBrand }}</h1>
                 <p class="home-hero__description">{{ $isEnglish ? 'Enjoy the delicious taste of Japanese barbecue in every carefully selected slice of meat.' : 'Thưởng thức vị ngon nướng Nhật trong từng lát thịt tuyển chọn.' }}</p>
                 <div class="home-hero__actions">
-                    <a class="home-hero__social" href="{{ filled($zaloUrl) ? $zaloUrl : '#home-restaurants' }}" aria-label="ZaloQA" title="ZaloQA" @if(filled($zaloUrl)) target="_blank" rel="noopener noreferrer" @endif><img src="{{ asset('yakiniku/logo-zalo.png') }}" alt=""></a>
-                    <a class="home-hero__social" href="{{ filled($facebookUrl) ? $facebookUrl : '#home-restaurants' }}" aria-label="Fanpage" title="Fanpage" @if(filled($facebookUrl)) target="_blank" rel="noopener noreferrer" @endif><img src="{{ asset('yakiniku/logo-facebook-blue.png') }}" alt=""></a>
-                    <a class="home-hero__social home-hero__social--youtube" href="{{ filled($youtubeUrl) ? $youtubeUrl : '#home-restaurants' }}" aria-label="Youtube" title="Youtube" @if(filled($youtubeUrl)) target="_blank" rel="noopener noreferrer" @endif><img src="{{ asset('yakiniku/logo-youtube.png') }}" alt=""></a>
+                    <a class="home-hero__social" href="{{ filled($zaloUrl) ? $zaloUrl : '#home-restaurants' }}" aria-label="ZaloQA" title="ZaloQA" @if(filled($zaloUrl)) target="_blank" rel="noopener noreferrer" @endif><img src="{{ asset('yakiniku/logo-zalo.png') }}" alt="" width="48" height="48"></a>
+                    <a class="home-hero__social" href="{{ filled($facebookUrl) ? $facebookUrl : '#home-restaurants' }}" aria-label="Fanpage" title="Fanpage" @if(filled($facebookUrl)) target="_blank" rel="noopener noreferrer" @endif><img src="{{ asset('yakiniku/logo-facebook-blue.png') }}" alt="" width="48" height="48"></a>
+                    <a class="home-hero__social home-hero__social--youtube" href="{{ filled($youtubeUrl) ? $youtubeUrl : '#home-restaurants' }}" aria-label="Youtube" title="Youtube" @if(filled($youtubeUrl)) target="_blank" rel="noopener noreferrer" @endif><img src="{{ asset('yakiniku/logo-youtube.png') }}" alt="" width="48" height="48"></a>
                 </div>
                 <div class="home-hero__book-row"><a class="home-hero__book" href="{{ url('/booking') }}">{{ $isEnglish ? 'BOOK NOW' : 'ĐẶT BÀN NGAY' }}</a></div>
             </div>
@@ -256,6 +258,14 @@
                 let timer;
                 const show = (index) => {
                     active = (index + slides.length) % slides.length;
+                    [active, (active + 1) % slides.length].forEach((slideIndex) => {
+                        const slide = slides[slideIndex];
+                        const image = slide.dataset.backgroundImage;
+                        if (image) {
+                            slide.style.backgroundImage = `url("${image}")`;
+                            delete slide.dataset.backgroundImage;
+                        }
+                    });
                     slides.forEach((slide, i) => slide.classList.toggle('is-active', i === active));
                     dots.forEach((dot, i) => {
                         dot.setAttribute('aria-current', i === active ? 'true' : 'false');

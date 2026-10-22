@@ -24,9 +24,13 @@ class MenuItemsTable
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('name')
+                    ->limit(38)
+                    ->tooltip(fn ($record): string => $record->name)
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('slug')
+                    ->limit(38)
+                    ->tooltip(fn ($record): string => $record->slug)
                     ->searchable()
                     ->sortable(),
                 ImageColumn::make('image'),

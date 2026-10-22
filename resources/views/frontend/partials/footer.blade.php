@@ -66,6 +66,19 @@
     .site-footer__signup { margin: 0 0 23px; padding-bottom: 21px; border-bottom: 1px solid var(--footer-line); }
     .site-footer__button { display: inline-flex; min-width: 145px; min-height: 42px; align-items: center; justify-content: space-between; gap: 22px; margin-top: 4px; padding: 0 14px; border: 1px solid rgba(255,255,255,.55); color: #fff !important; font-size: 12px; font-weight: 650; letter-spacing: .04em; text-transform: uppercase; transition: background .18s ease, border-color .18s ease; }
     .site-footer__button:hover { border-color: var(--footer-accent); background: var(--footer-accent); }
+    .lead-modal[hidden] { display:none; }
+    .lead-modal { position:fixed; inset:0; z-index:1000; display:grid; place-items:center; padding:18px; background:rgba(0,0,0,.78); }
+    .lead-modal__panel { position:relative; width:min(100%,464px); padding:20px; border:1px solid #545454; background:rgba(20,20,20,.97); box-shadow:0 18px 55px #0008; }
+    .lead-modal__grid { display:grid; grid-template-columns:1fr 1fr; gap:14px 8px; }
+    .lead-modal__field { min-width:0; }
+    .lead-modal__field input,.lead-modal__field select { width:100%; height:45px; padding:0 10px; border:1px solid #666; border-radius:0; background:#17191c; color:#eee; font:14px 'UTM BryantLG',Arial,sans-serif; }
+    .lead-modal__field input:focus,.lead-modal__field select:focus { outline:1px solid #a42127; border-color:#a42127; }
+    .lead-modal__submit { display:block; min-width:125px; margin:16px auto 0; padding:12px 18px; border:0; background:#a42127; color:#fff; font:700 15px 'UTM BryantLG',Arial,sans-serif; cursor:pointer; }
+    .lead-modal__close { position:absolute; right:12px; bottom:10px; padding:0; border:0; background:none; color:#aaa; font-size:24px; cursor:pointer; }
+    .lead-modal__message { grid-column:1/-1; min-height:18px; margin:0; color:#f0b8b5; font-size:13px; }
+    .lead-modal__message.is-success { color:#a7d7aa; }
+    body.has-lead-modal { overflow:hidden; }
+    .lead-sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
     .site-footer__legal { margin: 0; color: var(--footer-text); font-size: 12px; line-height: 1.95; }
     .site-footer__topics { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 20px; padding: 0; list-style: none; }
     .site-footer__topics a { color: var(--footer-text); font-size: 12px; line-height: 1.65; }
@@ -122,7 +135,7 @@
                 <div class="site-footer__signup">
                     <h2 class="site-footer__title" id="footer-signup-title">{{ app()->getLocale() === 'vi' ? 'Đăng ký nhận ưu đãi' : 'Sign up for special offers' }}</h2>
                     @if (filled($footerSubscribeText))<p class="site-footer__copy">{{ $footerSubscribeText }}</p>@endif
-                    <a class="site-footer__button" href="{{ $footerEmail ? 'mailto:'.$footerEmail.'?subject='.rawurlencode(app()->getLocale() === 'vi' ? 'Đăng ký nhận ưu đãi' : 'Subscribe for offers') : '#footer-restaurant-title' }}">
+                    <a class="site-footer__button" href="#lead-signup" data-open-lead-modal>
                         <span>{{ app()->getLocale() === 'vi' ? 'Đăng ký' : 'Subscribe' }}</span><span aria-hidden="true">›</span>
                     </a>
                 </div>
@@ -161,3 +174,48 @@
         <div class="site-footer__copyright">© {{ date('Y') }} {{ $footerName }}. {{ app()->getLocale() === 'vi' ? 'Managed by Sagi.' : 'Managed by Sagi.' }}</div>
     </div>
 </footer>
+
+<div class="lead-modal" id="lead-signup" hidden>
+    <section class="lead-modal__panel" role="dialog" aria-modal="true" aria-labelledby="lead-modal-title">
+        <h2 class="site-footer__title" id="lead-modal-title">{{ app()->getLocale() === 'vi' ? 'ĐĂNG KÝ NHẬN ƯU ĐÃI' : 'SIGN UP FOR SPECIAL OFFERS' }}</h2>
+        <form id="leadSignupForm" method="POST" action="{{ route('leads.store') }}">
+            @csrf
+            <div class="lead-modal__grid">
+                <div class="lead-modal__field"><label class="lead-sr-only" for="leadSalutation">{{ app()->getLocale() === 'vi' ? 'Danh xưng' : 'Title' }}</label><select id="leadSalutation" name="salutation" required><option value="">{{ app()->getLocale() === 'vi' ? 'Chọn danh xưng' : 'Choose title' }}</option><option value="Ông">{{ app()->getLocale() === 'vi' ? 'Ông' : 'Mr.' }}</option><option value="Bà">{{ app()->getLocale() === 'vi' ? 'Bà' : 'Ms.' }}</option></select></div>
+                <div class="lead-modal__field"><label class="lead-sr-only" for="leadName">{{ app()->getLocale() === 'vi' ? 'Họ và tên' : 'Full name' }}</label><input id="leadName" name="name" type="text" placeholder="{{ app()->getLocale() === 'vi' ? 'Họ và tên*' : 'Full name*' }}" required maxlength="255"></div>
+                <div class="lead-modal__field"><label class="lead-sr-only" for="leadPhone">{{ app()->getLocale() === 'vi' ? 'Số điện thoại' : 'Phone number' }}</label><input id="leadPhone" name="phone" type="tel" placeholder="{{ app()->getLocale() === 'vi' ? 'Số điện thoại' : 'Phone number' }}" required maxlength="30"></div>
+                <div class="lead-modal__field"><label class="lead-sr-only" for="leadEmail">Email</label><input id="leadEmail" name="email" type="email" placeholder="Email" required maxlength="255"></div>
+                <p class="lead-modal__message" id="leadModalMessage" aria-live="polite"></p>
+            </div>
+            <button class="lead-modal__submit" type="submit">{{ app()->getLocale() === 'vi' ? 'ĐĂNG KÝ' : 'SUBSCRIBE' }}</button>
+        </form>
+        <button class="lead-modal__close" type="button" data-close-lead-modal aria-label="{{ app()->getLocale() === 'vi' ? 'Đóng' : 'Close' }}">×</button>
+    </section>
+</div>
+<script>
+    (() => {
+        const modal = document.getElementById('lead-signup');
+        const form = document.getElementById('leadSignupForm');
+        if (!modal || !form) return;
+        const message = document.getElementById('leadModalMessage');
+        const close = () => { modal.hidden = true; document.body.classList.remove('has-lead-modal'); };
+        document.querySelectorAll('[data-open-lead-modal]').forEach((trigger) => trigger.addEventListener('click', (event) => {
+            event.preventDefault(); modal.hidden = false; document.body.classList.add('has-lead-modal'); form.querySelector('select').focus();
+        }));
+        modal.querySelectorAll('[data-close-lead-modal]').forEach((button) => button.addEventListener('click', close));
+        modal.addEventListener('click', (event) => { if (event.target === modal) close(); });
+        document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && !modal.hidden) close(); });
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault(); message.textContent = ''; message.classList.remove('is-success');
+            const submit = form.querySelector('[type="submit"]'); submit.disabled = true;
+            try {
+                const response = await fetch(form.action, { method:'POST', headers:{'Accept':'application/json','X-Requested-With':'XMLHttpRequest'}, body:new FormData(form) });
+                const payload = await response.json();
+                if (!response.ok) throw new Error(payload.message || Object.values(payload.errors || {}).flat()[0] || '{{ app()->getLocale() === 'vi' ? 'Vui lòng kiểm tra lại thông tin.' : 'Please check your details.' }}');
+                message.textContent = payload.message || '{{ app()->getLocale() === 'vi' ? 'Đăng ký thành công!' : 'Thank you for subscribing!' }}';
+                message.classList.add('is-success'); form.reset(); window.setTimeout(close, 1800);
+            } catch (error) { message.textContent = error.message || '{{ app()->getLocale() === 'vi' ? 'Không thể gửi đăng ký. Vui lòng thử lại.' : 'Could not submit. Please try again.' }}'; }
+            finally { submit.disabled = false; }
+        });
+    })();
+</script>

@@ -16,7 +16,12 @@ class SettingResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedSwatch;
 
+    protected static string|\UnitEnum|null $navigationGroup = 'Hệ thống';
+
     protected static ?string $navigationLabel = 'Cài đặt giao diện';
+
+    protected static ?int $navigationSort = 1;
+
 
     protected static ?string $modelLabel = 'cài đặt giao diện';
 

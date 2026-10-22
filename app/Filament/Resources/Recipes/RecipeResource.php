@@ -22,6 +22,12 @@ class RecipeResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
+    protected static string|\UnitEnum|null $navigationGroup = 'Nội dung';
+
+    protected static ?string $navigationLabel = 'Công thức';
+
+    protected static ?int $navigationSort = 3;
+
     protected static ?string $recordTitleAttribute = 'Recipe';
 
     public static function form(Schema $schema): Schema

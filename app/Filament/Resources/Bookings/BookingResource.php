@@ -20,6 +20,12 @@ class BookingResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
+    protected static string|\UnitEnum|null $navigationGroup = 'Đặt bàn & khách hàng';
+
+    protected static ?string $navigationLabel = 'Đặt bàn';
+
+    protected static ?int $navigationSort = 1;
+
     protected static ?string $recordTitleAttribute = 'Booking';
 
     public static function form(Schema $schema): Schema

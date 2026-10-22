@@ -138,7 +138,7 @@ class BookingService
         return $code;
     }
 
-    public function tableSelectionError(int $partySize, array $tableCodes, ?int $floor = null, ?int $restaurantId = null): ?string
+    public function tableSelectionError(int $partySize, array $tableCodes, ?int $floor = null, ?int $restaurantId = null, bool $requireSingleFloor = true): ?string
     {
         $tables = $this->tablesForRestaurant($restaurantId);
         $capacities = $tables->pluck('capacity', 'code')->all();
@@ -150,7 +150,7 @@ class BookingService
             return __('Please select enough tables for your party size.');
         }
 
-        if ($floor !== null && collect($tableCodes)->contains(fn (string $code): bool => ! isset($floors[$code]) || (int) $floors[$code] !== (int) $floor)) {
+        if ($requireSingleFloor && $floor !== null && collect($tableCodes)->contains(fn (string $code): bool => ! isset($floors[$code]) || (int) $floors[$code] !== (int) $floor)) {
             return __('Please select tables on the chosen floor.');
         }
 

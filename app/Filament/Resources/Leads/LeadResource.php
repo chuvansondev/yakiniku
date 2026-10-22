@@ -20,6 +20,15 @@ class LeadResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
+    protected static string|\UnitEnum|null $navigationGroup = 'Đặt bàn & khách hàng';
+
+    protected static ?string $navigationLabel = 'Khách đăng ký ưu đãi';
+
+    protected static ?int $navigationSort = 3;
+
+
+
+
     protected static ?string $recordTitleAttribute = 'Lead';
 
     public static function form(Schema $schema): Schema

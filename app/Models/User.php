@@ -8,8 +8,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Filament\Panel;
+use Filament\Models\Contracts\FilamentUser;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
@@ -23,6 +28,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'phone',
+        'role_id',
+        'is_locked',
+        'email_verified_at',
     ];
 
     /**
@@ -48,9 +57,57 @@ class User extends Authenticatable
         ];
     }
 
+    protected function password(): Attribute
+    {
+        return Attribute::make(
+            set: fn (?string $value): ?string => filled($value) ? Hash::make($value) : null,
+        );
+    }
+
     public function role(): BelongsTo
     {
         return $this->belongsTo(Role::class);
+    }
+
+    public function bookings(): HasMany
+    {
+        return $this->hasMany(Booking::class);
+    }
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return $panel->getId() === 'admin'
+            && $this->is_admin
+            && ! $this->is_locked
+            && $this->hasPermission('admin.dashboard.view');
+    }
+
+    public function hasPermission(string $permission): bool
+    {
+        if ($this->is_admin && $permission === 'admin.dashboard.view') {
+            return true;
+        }
+
+        return $this->role()
+            ->whereHas('permissions', fn ($query) => $query->where('permissions.slug', $permission))
+            ->exists();
+    }
+
+    public function verifyAndUpgradePassword(string $password): bool
+    {
+        if (Hash::check($password, $this->password)) {
+            return true;
+        }
+
+        // Upgrade legacy plaintext passwords on successful login.
+        if (hash_equals((string) $this->password, $password)) {
+            $this->password = $password;
+            $this->save();
+
+            return true;
+        }
+
+        return false;
     }
 
 }
