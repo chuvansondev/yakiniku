@@ -20,6 +20,8 @@ use Illuminate\Database\Eloquent\Model;
 
 trait UsesManagePermission
 {
+    use TranslatesResourceNavigation;
+
     private static function managePermission(): ?string
     {
         return match (static::getModel()) {

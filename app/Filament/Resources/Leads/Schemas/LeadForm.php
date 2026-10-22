@@ -29,7 +29,7 @@ class LeadForm
                     ->default(null)
                     ->columnSpanFull(),
                 Select::make('status')
-                    ->options(['new' => 'New', 'read' => 'Read', 'contacted' => 'Contacted'])
+                    ->options(['new' => __('New'), 'read' => __('Read'), 'contacted' => __('Contacted')])
                     ->default('new')
                     ->required(),
             ]);

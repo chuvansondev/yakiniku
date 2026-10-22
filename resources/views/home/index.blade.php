@@ -62,6 +62,8 @@
         }
     </style>
     <style>
+        html, body { width:100%; margin:0; }
+        body { min-width:320px; }
         .home-page { --ink:#332a26; --muted:#75645a; --red:#a42127; --cream:#faf7f3; color:var(--ink); font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif; }
         .home-page * { box-sizing:border-box; }
         .home-page a { color:inherit; }

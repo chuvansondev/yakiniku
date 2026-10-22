@@ -31,7 +31,12 @@ class ListSettings extends Page implements HasForms
 
     public static function getNavigationLabel(): string|\Illuminate\Contracts\Support\Htmlable
     {
-        return 'Cài đặt giao diện';
+        return __('admin.nav.setting');
+    }
+
+    public function getTitle(): string|\Illuminate\Contracts\Support\Htmlable
+    {
+        return __('admin.nav.setting');
     }
 
     public function form(Schema $schema): Schema
@@ -46,7 +51,8 @@ class ListSettings extends Page implements HasForms
 
         Notification::make()
             ->success()
-            ->title('Đã lưu cài đặt giao diện')
+            ->title(__('admin.settings.saved'))
             ->send();
     }
+
 }

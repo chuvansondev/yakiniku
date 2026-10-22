@@ -30,6 +30,7 @@ class LeadsTable
                     ->sortable(),
                 TextColumn::make('status')
                     ->badge()
+                    ->formatStateUsing(fn (?string $state): string => $state ? __($state) : '')
                     ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()

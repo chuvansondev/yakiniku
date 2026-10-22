@@ -17,6 +17,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class RoleResource extends Resource
 {
+    use \App\Filament\Resources\Concerns\TranslatesResourceNavigation;
+
     protected static ?string $model = Role::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;

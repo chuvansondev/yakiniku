@@ -1,4 +1,5 @@
 <style>
+    html, body { width: 100%; margin: 0; }
     .site-header {
         --header-ink: #493b35;
         font-family: 'UTM BryantLG', Arial, sans-serif;

@@ -17,6 +17,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class PermissionResource extends Resource
 {
+    use \App\Filament\Resources\Concerns\TranslatesResourceNavigation;
+
     protected static ?string $model = Permission::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;

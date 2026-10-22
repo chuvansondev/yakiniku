@@ -1,6 +1,12 @@
 @php
     $languageSuffix = app()->getLocale() === 'en' ? '_en' : '';
     $footerName = setting('footer_brand_name'.$languageSuffix);
+    $footerLogo = setting('footer_logo_url');
+    $footerLogoUrl = filled($footerLogo)
+        ? (\Illuminate\Support\Str::startsWith($footerLogo, ['http://', 'https://', '/'])
+            ? $footerLogo
+            : asset('storage/'.ltrim($footerLogo, '/')))
+        : null;
     $footerAddress = setting('footer_address'.$languageSuffix);
     $footerDescription = setting('footer_description'.$languageSuffix);
     $footerHours = setting('footer_hours'.$languageSuffix);
@@ -51,6 +57,7 @@
     .site-footer__main { width: min(100% - 48px, 1240px); margin-inline: auto; padding: 56px 0 46px; }
     .site-footer__grid { display: grid; grid-template-columns: 1.08fr 1.18fr .92fr; gap: clamp(30px, 5vw, 76px); }
     .site-footer__title { margin: 0 0 18px; color: var(--footer-title); font-size: 14px; font-weight: 750; letter-spacing: .025em; line-height: 1.5; text-transform: uppercase; }
+    .site-footer__brand-logo { display: block; width: auto; max-width: 190px; max-height: 72px; margin: -6px 0 18px; object-fit: contain; object-position: left center; }
     .site-footer__copy { margin: 0 0 14px; color: var(--footer-text); font-size: 13px; line-height: 1.9; }
     .site-footer__contact { display: grid; gap: 7px; margin: 18px 0 20px; padding: 0; list-style: none; }
     .site-footer__contact li { display: flex; gap: 10px; color: #bdc6d0; font-size: 13px; line-height: 1.7; overflow-wrap: anywhere; }
@@ -58,9 +65,9 @@
     .site-footer__contact a, .site-footer a { color: inherit; text-decoration: none; }
     .site-footer__contact a:hover, .site-footer a:hover { color: #fff; }
     .site-footer__socials { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin: 18px 0; }
-    .site-footer__social { width: 50px; height: 50px; display: inline-grid; place-items: center; border: 1px solid var(--footer-line); border-radius: 50%; background: #f8f9fa; color: #1d252d !important; font-size: 18px; font-weight: 800; }
-    .site-footer__social img { display: block; width: 36px; height: 36px; object-fit: contain; }
-    .site-footer__social:hover { background: var(--footer-accent); color: #fff !important; }
+    .site-footer__social { width: 50px; height: 50px; display: inline-grid; place-items: center; overflow: hidden; padding: 0; border: 1px solid var(--footer-line); border-radius: 50%; background: #000; color: #1d252d !important; font-size: 18px; font-weight: 800; }
+    .site-footer__social img { display: block; width: 100%; height: 100%; border-radius: inherit; object-fit: cover; }
+    .site-footer__social:hover { background: #000; color: #1d252d !important; }
     .site-footer__notice { display: inline-flex; align-items: center; gap: 9px; margin-top: 4px; padding: 8px 12px; border: 1px solid rgba(68, 161, 215, .55); border-radius: 3px; background: #086ca3; color: #fff; font-size: 11px; font-weight: 750; line-height: 1.35; }
     .site-footer__notice-mark { width: 28px; height: 28px; display: grid; place-items: center; border-radius: 50%; background: #fff; color: #1682b7; font-size: 19px; }
     .site-footer__signup { margin: 0 0 23px; padding-bottom: 21px; border-bottom: 1px solid var(--footer-line); }
@@ -105,6 +112,7 @@
         <div class="site-footer__grid">
             <section class="site-footer__column" aria-labelledby="footer-restaurant-title">
                 @if (filled($footerName))<h2 class="site-footer__title" id="footer-restaurant-title">{{ $footerName }}</h2>@endif
+                @if ($footerLogoUrl)<img class="site-footer__brand-logo" src="{{ $footerLogoUrl }}" alt="{{ $footerName ?: config('app.name') }}" loading="lazy">@endif
                 @if (filled($footerDescription))<p class="site-footer__copy">{{ $footerDescription }}</p>@endif
                 @if ($footerAddress)
                     <p class="site-footer__copy">{{ $footerAddress }}</p>

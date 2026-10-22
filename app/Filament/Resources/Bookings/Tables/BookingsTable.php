@@ -49,7 +49,8 @@ class BookingsTable
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('status')
-                    ->badge(),
+                    ->badge()
+                    ->formatStateUsing(fn (?string $state): string => $state ? __($state) : ''),
                 TextColumn::make('qr_code')
                     ->searchable(),
                 TextColumn::make('created_at')

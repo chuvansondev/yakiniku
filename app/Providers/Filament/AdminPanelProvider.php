@@ -15,6 +15,7 @@ use Filament\Support\Enums\Width;
 use Filament\Navigation\NavigationGroup;
 use Filament\Widgets\AccountWidget;
 use Filament\Widgets\FilamentInfoWidget;
+use Filament\View\PanelsRenderHook;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -40,11 +41,12 @@ class AdminPanelProvider extends PanelProvider
                 Dashboard::class,
             ])
             ->navigationGroups([
-                NavigationGroup::make()->label('Đặt bàn & khách hàng')->collapsible(),
-                NavigationGroup::make()->label('Thực đơn')->collapsible(),
-                NavigationGroup::make()->label('Nội dung')->collapsible(),
-                NavigationGroup::make()->label('Hệ thống')->collapsible(),
+                NavigationGroup::make()->label(__('admin.nav.group.booking_customers'))->collapsible(),
+                NavigationGroup::make()->label(__('admin.nav.group.menu'))->collapsible(),
+                NavigationGroup::make()->label(__('admin.nav.group.content'))->collapsible(),
+                NavigationGroup::make()->label(__('admin.nav.group.system'))->collapsible(),
             ])
+            ->renderHook(PanelsRenderHook::TOPBAR_END, fn (): \Illuminate\Contracts\View\View => view('filament.locale-switcher'))
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([
                 AccountWidget::class,

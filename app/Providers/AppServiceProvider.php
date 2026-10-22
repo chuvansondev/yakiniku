@@ -6,6 +6,9 @@ use App\Models\User;
 use App\Policies\UserPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
+use Filament\Forms\Components\Field;
+use Filament\Tables\Columns\Column;
+use Filament\Schemas\Components\Section;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -50,5 +53,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Gate::policy(User::class, UserPolicy::class);
+        Field::configureUsing(fn (Field $field) => $field->translateLabel());
+        Column::configureUsing(fn (Column $column) => $column->translateLabel());
+        Section::configureUsing(fn (Section $section) => $section->translateLabel());
     }
 }

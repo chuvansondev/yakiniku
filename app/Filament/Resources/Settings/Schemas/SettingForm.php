@@ -25,9 +25,18 @@ class SettingForm
                         FileUpload::make('header_logo_url')
                             ->label('Logo Header')
                             ->image()
+                            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
+                            ->maxSize(5120)
+                            ->fetchFileInformation(false)
                             ->disk('public')
                             ->directory('header-logos')
                             ->visibility('public')
+                            ->hintAction(\Filament\Actions\Action::make('clearHeaderLogo')
+                                ->label('Xóa ảnh logo hiện tại')
+                                ->icon('heroicon-m-trash')
+                                ->color('danger')
+                                ->visible(fn (\Filament\Schemas\Components\Utilities\Get $get): bool => filled($get('header_logo_url')))
+                                ->action(fn (\Filament\Schemas\Components\Utilities\Set $set) => $set('header_logo_url', null)))
                             ->helperText('Chọn ảnh logo. Để trống sẽ dùng logo mặc định hoặc tên thương hiệu.'),
                         TextInput::make('header_home_label')->label('Nhãn 1'),
                         TextInput::make('header_home_label_en')->label('Label 1'),
@@ -79,6 +88,22 @@ class SettingForm
                     ->schema([
                         TextInput::make('footer_brand_name')->label('Tên thương hiệu Footer (Tiếng Việt)'),
                         TextInput::make('footer_brand_name_en')->label('Footer brand name (English)'),
+                        FileUpload::make('footer_logo_url')
+                            ->label('Logo Footer')
+                            ->image()
+                            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
+                            ->maxSize(5120)
+                            ->fetchFileInformation(false)
+                            ->disk('public')
+                            ->directory('footer-logos')
+                            ->visibility('public')
+                            ->hintAction(\Filament\Actions\Action::make('clearFooterLogo')
+                                ->label('Xóa ảnh logo Footer')
+                                ->icon('heroicon-m-trash')
+                                ->color('danger')
+                                ->visible(fn (\Filament\Schemas\Components\Utilities\Get $get): bool => filled($get('footer_logo_url')))
+                                ->action(fn (\Filament\Schemas\Components\Utilities\Set $set) => $set('footer_logo_url', null)))
+                            ->helperText('Chọn ảnh logo hiển thị dưới tên thương hiệu trong Footer.'),
                         Textarea::make('footer_description')->label('Mô tả (Tiếng Việt)'),
                         Textarea::make('footer_description_en')->label('Description (English)'),
                         Textarea::make('footer_address')->label('Địa chỉ (Tiếng Việt)'),
