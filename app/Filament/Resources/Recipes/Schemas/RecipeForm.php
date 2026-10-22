@@ -30,12 +30,6 @@ class RecipeForm
                 Toggle::make('status')
                     ->required(),
                 DateTimePicker::make('published_at'),
-                TextInput::make('delete_at')
-                    ->numeric()
-                    ->default(null),
-                TextInput::make('delete_by')
-                    ->numeric()
-                    ->default(null),
             ]);
     }
 }

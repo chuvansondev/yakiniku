@@ -59,12 +59,6 @@ class BookingForm
                     ->required(),
                 TextInput::make('qr_code')
                     ->default(null),
-                TextInput::make('delete_at')
-                    ->numeric()
-                    ->default(null),
-                TextInput::make('delete_by')
-                    ->numeric()
-                    ->default(null),
             ]);
     }
 }

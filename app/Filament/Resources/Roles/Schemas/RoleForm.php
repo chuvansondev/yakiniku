@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Roles\Schemas;
 
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\CheckboxList;
 use Filament\Schemas\Schema;
 
 class RoleForm
@@ -22,6 +23,10 @@ class RoleForm
                     ->unique(ignoreRecord: true)
                     ->helperText('Để trống để tự tạo từ tên vai trò.'),
                 Textarea::make('description')
+                    ->columnSpanFull(),
+                CheckboxList::make('permissions')
+                    ->relationship(titleAttribute: 'name')
+                    ->columns(2)
                     ->columnSpanFull(),
             ]);
     }

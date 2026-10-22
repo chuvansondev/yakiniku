@@ -37,12 +37,6 @@ class MenuCategoryForm
                     ->helperText('Để trống để tự tăng thứ tự.'),
                 Toggle::make('status')
                     ->required(),
-                TextInput::make('delete_at')
-                    ->numeric()
-                    ->default(null),
-                TextInput::make('delete_by')
-                    ->numeric()
-                    ->default(null),
             ]);
     }
 }

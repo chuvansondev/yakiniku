@@ -31,12 +31,6 @@ class PromotionForm
                 DatePicker::make('end_date'),
                 Toggle::make('status')
                     ->required(),
-                TextInput::make('delete_at')
-                    ->numeric()
-                    ->default(null),
-                TextInput::make('delete_by')
-                    ->numeric()
-                    ->default(null),
             ]);
     }
 }

@@ -42,12 +42,6 @@ class ComboForm
                     ->numeric()
                     ->nullable()
                     ->helperText('Để trống để tự tăng thứ tự.'),
-                TextInput::make('delete_at')
-                    ->numeric()
-                    ->default(null),
-                TextInput::make('delete_by')
-                    ->numeric()
-                    ->default(null),
             ]);
     }
 }

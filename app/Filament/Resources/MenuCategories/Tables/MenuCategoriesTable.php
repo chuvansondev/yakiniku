@@ -41,12 +41,6 @@ class MenuCategoriesTable
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('delete_at')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('delete_by')
-                    ->numeric()
-                    ->sortable(),
             ])
             ->filters([
                 TrashedFilter::make(),
