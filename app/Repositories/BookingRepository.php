@@ -10,6 +10,7 @@ use App\Repositories\Contracts\BookingRepositoryContract;
 use App\Repositories\Contracts\BookingStatusHistoryRepositoryContract;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class BookingRepository extends EloquentRepository implements BookingRepositoryContract
 {
@@ -99,12 +100,12 @@ class BookingRepository extends EloquentRepository implements BookingRepositoryC
 
     private function recordStatusChange(Booking $booking, ?string $fromStatus, string $toStatus): void
     {
-        $actor = auth()->user();
+        $actor = Auth::user();
 
         app(BookingStatusHistoryRepositoryContract::class)->createForBooking($booking, [
             'from_status' => $fromStatus,
             'to_status' => $toStatus,
-            'changed_by' => auth()->id(),
+            'changed_by' => Auth::id(),
             'changed_by_name' => $actor?->name ?? 'System',
             'source' => $actor?->is_admin ? 'admin' : ($actor ? 'customer' : 'system'),
             'change_type' => $fromStatus === null ? 'created' : 'status_change',
