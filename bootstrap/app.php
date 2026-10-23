@@ -15,6 +15,14 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        if (env('VERCEL')) {
+            // The PHP server receives HTTP from Vercel's local HTTPS proxy.
+            $middleware->trustProxies(
+                at: ['127.0.0.1', '::1'],
+                headers: \Illuminate\Http\Request::HEADER_X_FORWARDED_PROTO,
+            );
+        }
+
         $middleware->web(append: [SetLocale::class]);
         $middleware->alias([
             'active' => EnsureUserIsActive::class,

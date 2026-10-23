@@ -8,6 +8,10 @@
   },
   "routes": [
     {
+      "src": "/(css|js|fonts)/filament/(.*)",
+      "dest": "/api/index.php"
+    },
+    {
       "src": "/(build|css|js|images|fonts)/(.*)",
       "dest": "/public/$1/$2"
     },
