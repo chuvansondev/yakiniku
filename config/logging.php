@@ -101,7 +101,13 @@ return [
             'handler_with' => [
                 'stream' => 'php://stderr',
             ],
-            'formatter' => env('LOG_STDERR_FORMATTER'),
+            'formatter' => env('LOG_STDERR_FORMATTER', env('VERCEL') ? \Monolog\Formatter\LineFormatter::class : null),
+            // Keep the error message visible when function logs truncate long traces.
+            'formatter_with' => env('VERCEL') ? [
+                'format' => "[%datetime%] %level_name%: %message%\n",
+                'allowInlineLineBreaks' => false,
+                'includeStacktraces' => false,
+            ] : [],
             'processors' => [PsrLogMessageProcessor::class],
         ],
 
