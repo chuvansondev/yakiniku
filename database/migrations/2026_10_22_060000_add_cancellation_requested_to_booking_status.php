@@ -9,6 +9,13 @@ return new class extends Migration
 {
     public function up(): void
     {
+        if (DB::getDriverName() === 'pgsql') {
+            DB::statement('ALTER TABLE "bookings" DROP CONSTRAINT IF EXISTS "bookings_status_check"');
+            DB::statement("ALTER TABLE \"bookings\" ADD CONSTRAINT \"bookings_status_check\" CHECK (\"status\" IN ('pending', 'confirmed', 'cancellation_requested', 'cancelled', 'completed'))");
+
+            return;
+        }
+
         Schema::table('bookings', function (Blueprint $table): void {
             $table->enum('status', [
                 'pending',
@@ -25,6 +32,13 @@ return new class extends Migration
         DB::table('bookings')
             ->where('status', 'cancellation_requested')
             ->update(['status' => 'confirmed']);
+
+        if (DB::getDriverName() === 'pgsql') {
+            DB::statement('ALTER TABLE "bookings" DROP CONSTRAINT IF EXISTS "bookings_status_check"');
+            DB::statement("ALTER TABLE \"bookings\" ADD CONSTRAINT \"bookings_status_check\" CHECK (\"status\" IN ('pending', 'confirmed', 'cancelled', 'completed'))");
+
+            return;
+        }
 
         Schema::table('bookings', function (Blueprint $table): void {
             $table->enum('status', [
