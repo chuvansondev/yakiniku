@@ -36,6 +36,10 @@
         }
     },
     "scripts": {
+        "vercel": [
+            "@php artisan package:discover --ansi",
+            "@php artisan filament:assets --ansi"
+        ],
         "setup": [
             "composer install",
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
