@@ -117,7 +117,7 @@ class PasswordResetTest extends TestCase
             'password_confirmation' => 'new-password-123',
         ])->assertRedirect(route('login'));
         $this->post(route('login.store'), ['email' => $user->email, 'password' => 'new-password-123'])
-            ->assertRedirect(route('booking.mine'));
+            ->assertRedirect(route('home'));
         $this->assertAuthenticatedAs($user);
     }
 

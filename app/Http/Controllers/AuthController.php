@@ -43,7 +43,9 @@ class AuthController extends Controller
         $request->session()->regenerate();
         $request->session()->put('auth_session_version', $user->session_version);
 
-        return redirect()->intended(route('booking.mine'));
+        $request->session()->forget('url.intended');
+
+        return redirect()->route('home');
     }
 
     public function showRegister()
