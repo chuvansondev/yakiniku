@@ -9,11 +9,22 @@ use Illuminate\Support\Facades\Auth;
 
 class SettingService
 {
+    private ?Collection $requestSettings = null;
+
     public function __construct(private readonly SettingRepositoryContract $settings) {}
+
+    private function settingsForRequest(): Collection
+    {
+        return $this->requestSettings ??= PublicDataCache::remember(
+            PublicDataCache::SETTINGS,
+            'all',
+            fn () => $this->settings->allKeyed(),
+        );
+    }
 
     public function get(string $key, mixed $default = null): mixed
     {
-        $settings = PublicDataCache::remember(PublicDataCache::SETTINGS, 'all', fn () => $this->settings->allKeyed());
+        $settings = $this->settingsForRequest();
 
         if ($key === 'email' && ! $settings->has('email') && $settings->has('Email')) {
             return $settings->get('Email') ?? $default;
@@ -30,7 +41,7 @@ class SettingService
 
     public function all(): Collection
     {
-        $settings = PublicDataCache::remember(PublicDataCache::SETTINGS, 'all', fn () => $this->settings->allKeyed());
+        $settings = clone $this->settingsForRequest();
 
         // Older settings may have been stored with a display label as the key.
         // Normalize the legacy Email key so the form and frontend use `email`.
@@ -58,6 +69,7 @@ class SettingService
         }
 
         PublicDataCache::clear(PublicDataCache::SETTINGS);
+        $this->requestSettings = null;
     }
 
     public function localized(string $key, mixed $default = null): mixed

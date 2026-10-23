@@ -31,6 +31,8 @@ class AppServiceProvider extends ServiceProvider
     {
         require_once app_path('helpers.php');
 
+        $this->app->scoped(\App\Services\SettingService::class);
+
         $repositories = [
             \App\Repositories\Contracts\AdminResourceRepositoryContract::class => \App\Repositories\AdminResourceRepository::class,
             \App\Repositories\Contracts\SettingRepositoryContract::class => \App\Repositories\SettingRepository::class,
