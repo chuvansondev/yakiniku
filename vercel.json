@@ -13,7 +13,7 @@
     },
     {
       "src": "/storage/(.*)",
-      "dest": "/public/uploads/$1"
+      "dest": "/api/index.php"
     },
     {
       "src": "/(build|css|js|images|fonts|yakiniku)/(.*)",

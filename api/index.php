@@ -3,9 +3,10 @@
 // Filament assets published by Composer are bundled inside the PHP function.
 // The runtime does not expose these generated files as Vercel static assets.
 $requestPath = rawurldecode(parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/');
-if (preg_match('~^/(css|js|fonts)/filament/~', $requestPath, $matches)) {
-    $root = realpath(__DIR__.'/../public/'.$matches[1].'/filament');
-    $file = realpath(__DIR__.'/../public'.$requestPath);
+if (preg_match('~^/(css|js|fonts)/filament/~', $requestPath, $matches) || str_starts_with($requestPath, '/storage/')) {
+    $isUpload = str_starts_with($requestPath, '/storage/');
+    $root = realpath($isUpload ? __DIR__.'/../public/uploads' : __DIR__.'/../public/'.$matches[1].'/filament');
+    $file = realpath($isUpload ? __DIR__.'/../public/uploads/'.substr($requestPath, strlen('/storage/')) : __DIR__.'/../public'.$requestPath);
     $types = [
         'css' => 'text/css; charset=UTF-8',
         'js' => 'application/javascript; charset=UTF-8',
@@ -13,6 +14,12 @@ if (preg_match('~^/(css|js|fonts)/filament/~', $requestPath, $matches)) {
         'woff2' => 'font/woff2',
         'ttf' => 'font/ttf',
         'otf' => 'font/otf',
+        'jpg' => 'image/jpeg',
+        'jpeg' => 'image/jpeg',
+        'png' => 'image/png',
+        'gif' => 'image/gif',
+        'webp' => 'image/webp',
+        'avif' => 'image/avif',
     ];
     $type = $file ? ($types[strtolower(pathinfo($file, PATHINFO_EXTENSION))] ?? null) : null;
 
