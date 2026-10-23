@@ -8,8 +8,12 @@
   },
   "routes": [
     {
-      "src": "/(css|js|images|favicon.ico)/(.*)",
+      "src": "/(build|css|js|images|fonts)/(.*)",
       "dest": "/public/$1/$2"
+    },
+    {
+      "src": "/(favicon\\.ico|robots\\.txt)",
+      "dest": "/public/$1"
     },
     {
       "src": "/(.*)",
@@ -19,6 +23,9 @@
   "env": {
     "APP_ENV": "production",
     "APP_DEBUG": "false",
+    "LOG_CHANNEL": "stderr",
+    "SESSION_DRIVER": "database",
+    "CACHE_STORE": "database",
     "APP_CONFIG_CACHE": "/tmp/config.php",
     "APP_EVENTS_CACHE": "/tmp/events.php",
     "APP_PACKAGES_CACHE": "/tmp/packages.php",
