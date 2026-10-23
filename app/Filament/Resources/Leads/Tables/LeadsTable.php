@@ -15,7 +15,7 @@ class LeadsTable
     {
         return $table
             ->columns([
-                TextColumn::make('customer.name')
+                TextColumn::make('customer.name')->label(__('Customer'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('name')
@@ -25,7 +25,7 @@ class LeadsTable
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('email')
-                    ->label('Email address')
+                    ->label(__('Email address'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('status')

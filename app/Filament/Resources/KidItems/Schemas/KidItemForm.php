@@ -19,45 +19,45 @@ class KidItemForm
                     ->required()
                     ->maxLength(255),
                 TextInput::make('name_en')
-                    ->label('Name (English)')
+                    ->label(__('Name (English)'))
                     ->maxLength(255),
                 TextInput::make('slug')
                     ->nullable()
                     ->maxLength(255)
                     ->unique(ignoreRecord: true)
-                    ->helperText('Để trống để tự tạo từ tên món.'),
+                    ->helperText(__('Để trống để tự tạo từ tên món.')),
                 Select::make('type')
                     ->options([
-                        'food' => 'Food',
-                        'utensil' => 'Utensil',
+                        'food' => __('Food'),
+                        'utensil' => __('Utensil'),
                     ])
                     ->required(),
                 Select::make('food_category')
                     ->options([
-                        'meat' => 'Thịt',
-                        'side_dish' => 'Món ăn kèm',
-                        'vegetable' => 'Rau củ',
-                        'soup' => 'Súp',
-                        'rice_noodles' => 'Cơm và mì',
-                        'dessert' => 'Tráng miệng',
+                        'meat' => __('Thịt'),
+                        'side_dish' => __('Món ăn kèm'),
+                        'vegetable' => __('Rau củ'),
+                        'soup' => __('Súp'),
+                        'rice_noodles' => __('Cơm và mì'),
+                        'dessert' => __('Tráng miệng'),
                     ])
                     ->nullable(),
                 Textarea::make('description')
                     ->columnSpanFull(),
                 Textarea::make('description_en')
-                    ->label('Description (English)')
+                    ->label(__('Description (English)'))
                     ->columnSpanFull(),
                 FileUpload::make('image')
                     ->image(),
                 TextInput::make('price')
                     ->numeric()
-                    ->prefix('$')
+                    ->suffix('VND')
                     ->default(0)
                     ->required(),
                 TextInput::make('sort_order')
                     ->numeric()
                     ->nullable()
-                    ->helperText('Để trống để tự tăng thứ tự.'),
+                    ->helperText(__('Để trống để tự tăng thứ tự.')),
                 Toggle::make('status')
                     ->default(true)
                     ->required(),

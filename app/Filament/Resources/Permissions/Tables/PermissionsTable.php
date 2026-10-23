@@ -23,7 +23,7 @@ class PermissionsTable
                     ->searchable()
                     ->toggleable(),
                 TextColumn::make('roles_count')
-                    ->label('Roles')
+                    ->label(__('Roles'))
                     ->counts('roles')
                     ->sortable(),
                 TextColumn::make('created_at')

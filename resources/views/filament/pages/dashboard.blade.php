@@ -1,11 +1,11 @@
 <x-filament-panels::page>
     @php
         $cards = [
-            ['label' => 'Tổng lượt đặt bàn', 'value' => $bookingsCount, 'note' => 'Tất cả thời gian', 'icon' => 'heroicon-o-calendar-days'],
-            ['label' => 'Lịch đặt hôm nay', 'value' => $todayBookingsCount, 'note' => now()->locale('vi')->isoFormat('dddd, DD/MM'), 'icon' => 'heroicon-o-clock'],
-            ['label' => 'Chờ xác nhận', 'value' => $pendingBookingsCount, 'note' => 'Cần được xử lý', 'icon' => 'heroicon-o-bell-alert'],
-            ['label' => 'Yêu cầu hủy bàn', 'value' => $pendingCancellationCount, 'note' => 'Chờ admin xác nhận', 'icon' => 'heroicon-o-x-circle'],
-            ['label' => 'Khách đăng ký mới', 'value' => $newLeadsCount, 'note' => 'Đang chờ liên hệ', 'icon' => 'heroicon-o-user-plus'],
+            ['label' => __('Tổng lượt đặt bàn'), 'value' => $bookingsCount, 'note' => __('Tất cả thời gian'), 'icon' => 'heroicon-o-calendar-days'],
+            ['label' => __('Lịch đặt hôm nay'), 'value' => $todayBookingsCount, 'note' => now()->locale(app()->getLocale())->isoFormat('dddd, DD/MM'), 'icon' => 'heroicon-o-clock'],
+            ['label' => __('Chờ xác nhận'), 'value' => $pendingBookingsCount, 'note' => __('Cần được xử lý'), 'icon' => 'heroicon-o-bell-alert'],
+            ['label' => __('Yêu cầu hủy bàn'), 'value' => $pendingCancellationCount, 'note' => __('Chờ admin xác nhận'), 'icon' => 'heroicon-o-x-circle'],
+            ['label' => __('Khách đăng ký mới'), 'value' => $newLeadsCount, 'note' => __('Đang chờ liên hệ'), 'icon' => 'heroicon-o-user-plus'],
         ];
         $maxCount = max(1, (int) $bookingTrend->max('count'));
     @endphp
@@ -73,13 +73,13 @@
 
     <div class="yk-dashboard">
         <section class="yk-hero">
-            <p class="yk-hero__eyebrow">Yakiniku · Quản trị nhà hàng</p>
-            <h2>Chào {{ auth()->user()?->name ?? 'bạn' }}, sẵn sàng cho hôm nay?</h2>
-            <p class="yk-hero__copy">Theo dõi lịch đặt bàn, xử lý yêu cầu mới và nắm nhanh tình hình hoạt động của nhà hàng.</p>
-            <a href="{{ \App\Filament\Resources\Bookings\BookingResource::getUrl('index') }}" class="yk-button">Xem lịch đặt bàn <x-filament::icon icon="heroicon-m-arrow-right" /></a>
+            <p class="yk-hero__eyebrow"> {{ __('Yakiniku · Quản trị nhà hàng') }} </p>
+            <h2>{{ __('Welcome, :name. Ready for today?', ['name' => auth()->user()?->name ?? __('there')]) }}</h2>
+            <p class="yk-hero__copy"> {{ __('Theo dõi lịch đặt bàn, xử lý yêu cầu mới và nắm nhanh tình hình hoạt động của nhà hàng.') }} </p>
+            <a href="{{ \App\Filament\Resources\Bookings\BookingResource::getUrl('index') }}" class="yk-button"> {{ __('Xem lịch đặt bàn') }} <x-filament::icon icon="heroicon-m-arrow-right" /></a>
         </section>
 
-        <section class="yk-cards" aria-label="Tổng quan">
+        <section class="yk-cards" aria-label="{{ __('Tổng quan') }}">
             @foreach ($cards as $card)
                 <article class="yk-card">
                     <div class="yk-card__top">
@@ -93,8 +93,8 @@
 
         <section class="yk-main-grid">
             <article class="yk-panel">
-                <div class="yk-panel__head"><div><h3 class="yk-panel__title">Xu hướng đặt bàn</h3><p class="yk-panel__subtitle">Số lượt đặt trong 7 ngày gần nhất</p></div><span class="yk-chip">7 ngày</span></div>
-                <div class="yk-chart" role="img" aria-label="Biểu đồ số lượt đặt bàn trong 7 ngày gần nhất">
+                <div class="yk-panel__head"><div><h3 class="yk-panel__title"> {{ __('Xu hướng đặt bàn') }} </h3><p class="yk-panel__subtitle"> {{ __('Số lượt đặt trong 7 ngày gần nhất') }} </p></div><span class="yk-chip"> {{ __('7 ngày') }} </span></div>
+                <div class="yk-chart" role="img" aria-label="{{ __('Biểu đồ số lượt đặt bàn trong 7 ngày gần nhất') }}">
                     @foreach ($bookingTrend as $day)
                         @php $height = max(5, (int) round(($day['count'] / $maxCount) * 100)); @endphp
                         <div class="yk-chart__day"><span class="yk-chart__count">{{ $day['count'] }}</span><div class="yk-chart__track"><div class="yk-chart__bar" style="height:{{ $height }}%"></div></div><span class="yk-chart__weekday">{{ $day['weekday'] }}</span><span class="yk-chart__date">{{ $day['label'] }}</span></div>
@@ -103,33 +103,33 @@
             </article>
 
             <article class="yk-panel">
-                <div class="yk-panel__head"><div><h3 class="yk-panel__title">Đăng ký ưu đãi mới</h3><p class="yk-panel__subtitle">Khách đang chờ liên hệ</p></div><a class="yk-link" href="{{ \App\Filament\Resources\Leads\LeadResource::getUrl('index') }}">Xem tất cả</a></div>
+                <div class="yk-panel__head"><div><h3 class="yk-panel__title"> {{ __('Đăng ký ưu đãi mới') }} </h3><p class="yk-panel__subtitle"> {{ __('Khách đang chờ liên hệ') }} </p></div><a class="yk-link" href="{{ \App\Filament\Resources\Leads\LeadResource::getUrl('index') }}"> {{ __('Xem tất cả') }} </a></div>
                 <div class="yk-leads">
                     @forelse ($recentLeads as $lead)
-                        <div class="yk-lead"><span class="yk-avatar">{{ mb_strtoupper(mb_substr($lead->name ?: 'K', 0, 1)) }}</span><div class="yk-lead__body"><p class="yk-lead__name">{{ $lead->name ?: 'Khách hàng' }}</p><p class="yk-lead__contact">{{ $lead->phone ?: $lead->email }}</p></div><span class="yk-badge">Mới</span></div>
+                        <div class="yk-lead"><span class="yk-avatar">{{ mb_strtoupper(mb_substr($lead->name ?: 'K', 0, 1)) }}</span><div class="yk-lead__body"><p class="yk-lead__name">{{ $lead->name ?: __('Khách hàng') }}</p><p class="yk-lead__contact">{{ $lead->phone ?: $lead->email }}</p></div><span class="yk-badge"> {{ __('Mới') }} </span></div>
                     @empty
-                        <p class="yk-empty">Chưa có đăng ký mới.</p>
+                        <p class="yk-empty"> {{ __('Chưa có đăng ký mới.') }} </p>
                     @endforelse
                 </div>
             </article>
         </section>
 
         <section class="yk-panel" style="padding:0">
-            <div class="yk-panel__head" style="padding:21px 22px"><div><h3 class="yk-panel__title">Đặt bàn gần đây</h3><p class="yk-panel__subtitle">Các yêu cầu mới nhất từ khách hàng</p></div><a class="yk-link" href="{{ \App\Filament\Resources\Bookings\BookingResource::getUrl('index') }}">Quản lý đặt bàn →</a></div>
-            <div class="yk-table-wrap"><table class="yk-table"><thead><tr><th>Khách hàng</th><th>Cơ sở</th><th>Ngày & giờ</th><th>Số khách</th><th>Trạng thái</th></tr></thead><tbody>
+            <div class="yk-panel__head" style="padding:21px 22px"><div><h3 class="yk-panel__title"> {{ __('Đặt bàn gần đây') }} </h3><p class="yk-panel__subtitle"> {{ __('Các yêu cầu mới nhất từ khách hàng') }} </p></div><a class="yk-link" href="{{ \App\Filament\Resources\Bookings\BookingResource::getUrl('index') }}"> {{ __('Quản lý đặt bàn →') }} </a></div>
+            <div class="yk-table-wrap"><table class="yk-table"><thead><tr><th> {{ __('Khách hàng') }} </th><th> {{ __('Cơ sở') }} </th><th> {{ __('Ngày & giờ') }} </th><th> {{ __('Số khách') }} </th><th> {{ __('Trạng thái') }} </th></tr></thead><tbody>
                 @forelse ($recentBookings as $booking)
                     @php
                         [$statusLabel, $statusClass] = match ($booking->status) {
-                            \App\Enums\BookingStatus::Pending->value => ['Chờ xác nhận', 'pending'],
-                            \App\Enums\BookingStatus::Confirmed->value => ['Đã xác nhận', 'confirmed'],
-                            \App\Enums\BookingStatus::CancellationRequested->value => ['Chờ duyệt hủy', 'pending'],
-                            \App\Enums\BookingStatus::Completed->value => ['Hoàn thành', 'completed'],
-                            default => ['Đã hủy', 'cancelled'],
+                            \App\Enums\BookingStatus::Pending->value => [__('Chờ xác nhận'), 'pending'],
+                            \App\Enums\BookingStatus::Confirmed->value => [__('Đã xác nhận'), 'confirmed'],
+                            \App\Enums\BookingStatus::CancellationRequested->value => [__('Chờ duyệt hủy'), 'pending'],
+                            \App\Enums\BookingStatus::Completed->value => [__('Hoàn thành'), 'completed'],
+                            default => [__('Đã hủy'), 'cancelled'],
                         };
                     @endphp
                     <tr><td class="yk-table__customer">{{ $booking->customer_name }}<span class="yk-table__phone">{{ $booking->phone }}</span></td><td>{{ $booking->restaurant?->name ?? '—' }}</td><td>{{ $booking->booking_date?->format('d/m/Y') }} · {{ $booking->booking_time }}</td><td>{{ $booking->number_of_guests }}</td><td><span class="yk-status yk-status--{{ $statusClass }}">{{ $statusLabel }}</span></td></tr>
                 @empty
-                    <tr><td colspan="5" class="yk-empty">Chưa có lịch đặt bàn.</td></tr>
+                    <tr><td colspan="5" class="yk-empty"> {{ __('Chưa có lịch đặt bàn.') }} </td></tr>
                 @endforelse
             </tbody></table></div>
         </section>

@@ -15,21 +15,21 @@ class MenuItemForm
     {
         return $schema
             ->components([
-                Select::make('category_id')
+                Select::make('category_id')->label(__('Category'))
                     ->relationship('category', 'name')
                     ->required(),
                 TextInput::make('name')
                     ->required(),
                 TextInput::make('name_en')
-                    ->label('Name (English)'),
+                    ->label(__('Name (English)')),
                 TextInput::make('slug')
                     ->nullable()
-                    ->helperText('Để trống để tự tạo từ tên món.'),
+                    ->helperText(__('Để trống để tự tạo từ tên món.')),
                 Textarea::make('description')
                     ->default(null)
                     ->columnSpanFull(),
                 Textarea::make('description_en')
-                    ->label('Description (English)')
+                    ->label(__('Description (English)'))
                     ->default(null)
                     ->columnSpanFull(),
                 FileUpload::make('image')
@@ -38,7 +38,7 @@ class MenuItemForm
                     ->required()
                     ->numeric()
                     ->default(0.0)
-                    ->prefix('$'),
+                    ->suffix('VND'),
                 Toggle::make('is_must_try')
                     ->required(),
                 Toggle::make('is_for_kids')
@@ -46,7 +46,7 @@ class MenuItemForm
                 TextInput::make('sort_order')
                     ->numeric()
                     ->nullable()
-                    ->helperText('Để trống để tự tăng thứ tự.'),
+                    ->helperText(__('Để trống để tự tăng thứ tự.')),
                 Toggle::make('status')
                     ->required(),
             ]);

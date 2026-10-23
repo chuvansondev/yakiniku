@@ -25,13 +25,13 @@ class KidItemsTable
                     ->sortable(),
                 TextColumn::make('slug')
                     ->searchable(),
-                TextColumn::make('type')
+                TextColumn::make('type')->formatStateUsing(fn (?string $state): string => $state ? __($state) : '')
                     ->badge()
                     ->sortable(),
-                TextColumn::make('food_category')
+                TextColumn::make('food_category')->formatStateUsing(fn (?string $state): string => $state ? __($state) : '')
                     ->searchable(),
                 TextColumn::make('price')
-                    ->money('USD')
+                    ->money('VND')
                     ->sortable(),
                 TextColumn::make('sort_order')
                     ->numeric()

@@ -14,13 +14,13 @@ class CustomerForm
     {
         return $schema
             ->components([
-                Select::make('user_id')
+                Select::make('user_id')->label(__('User'))
                     ->relationship('user', 'name')
                     ->default(null),
                 TextInput::make('name')
                     ->default(null),
                 TextInput::make('email')
-                    ->label('Email address')
+                    ->label(__('Email address'))
                     ->email()
                     ->default(null),
                 TextInput::make('phone')

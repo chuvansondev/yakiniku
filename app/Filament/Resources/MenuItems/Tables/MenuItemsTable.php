@@ -20,7 +20,7 @@ class MenuItemsTable
     {
         return $table
             ->columns([
-                TextColumn::make('category.name')
+                TextColumn::make('category.name')->label(__('Category'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('name')
@@ -35,7 +35,7 @@ class MenuItemsTable
                     ->sortable(),
                 ImageColumn::make('image'),
                 TextColumn::make('price')
-                    ->money()
+                    ->money('VND')
                     ->sortable(),
                 IconColumn::make('is_must_try')
                     ->boolean(),

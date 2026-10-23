@@ -17,17 +17,17 @@ class BookingForm
         return $schema
             ->components([
                 TextInput::make('booking_code')
-                    ->label('Booking code')
+                    ->label(__('Booking code'))
                     ->disabled()
                     ->dehydrated(false)
                     ->placeholder(__('Automatically generated when saved')),
-                Select::make('restaurant_id')
+                Select::make('restaurant_id')->label(__('Restaurant'))
                     ->relationship('restaurant', 'name')
                     ->required(),
-                Select::make('user_id')
+                Select::make('user_id')->label(__('User'))
                     ->relationship('user', 'name')
                     ->default(null),
-                Select::make('customer_id')
+                Select::make('customer_id')->label(__('Customer'))
                     ->relationship('customer', 'name')
                     ->default(null),
                 TextInput::make('customer_name')
@@ -36,7 +36,7 @@ class BookingForm
                     ->tel()
                     ->required(),
                 TextInput::make('email')
-                    ->label('Email address')
+                    ->label(__('Email address'))
                     ->email()
                     ->default(null),
                 DatePicker::make('booking_date')

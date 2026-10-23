@@ -19,7 +19,7 @@ class PromotionForm
                     ->required(),
                 TextInput::make('slug')
                     ->nullable()
-                    ->helperText('Để trống để tự tạo từ tiêu đề.'),
+                    ->helperText(__('Để trống để tự tạo từ tiêu đề.')),
                 TextInput::make('short_description')
                     ->default(null),
                 Textarea::make('description')

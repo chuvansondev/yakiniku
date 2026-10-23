@@ -6,6 +6,21 @@ use Illuminate\Contracts\Support\Htmlable;
 
 trait TranslatesResourceNavigation
 {
+    public static function getModelLabel(): string
+    {
+        return __('admin.model.'.strtolower(class_basename(static::getModel())));
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return (string) static::getNavigationLabel();
+    }
+
+    public static function hasTitleCaseModelLabel(): bool
+    {
+        return app()->getLocale() === 'en';
+    }
+
     public static function getNavigationLabel(): string|Htmlable
     {
         $label = match (static::getModel()) {

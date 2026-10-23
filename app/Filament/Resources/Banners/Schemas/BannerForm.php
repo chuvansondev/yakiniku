@@ -17,7 +17,7 @@ class BannerForm
                 TextInput::make('title')
                     ->default(null),
                 Select::make('type')
-                    ->options(['image' => 'Image', 'video' => 'Video'])
+                    ->options(['image' => __('Image'), 'video' => __('Video')])
                     ->default('image')
                     ->required(),
                 FileUpload::make('image')
@@ -30,7 +30,7 @@ class BannerForm
                 TextInput::make('sort_order')
                     ->numeric()
                     ->nullable()
-                    ->helperText('Để trống để tự tăng thứ tự.'),
+                    ->helperText(__('Để trống để tự tăng thứ tự.')),
                 Toggle::make('status')
                     ->required(),
             ]);

@@ -17,40 +17,40 @@ class UserForm
     public static function configure(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Thông tin tài khoản')
+            Section::make(__('Thông tin tài khoản'))
                 ->schema([
                     TextInput::make('name')
-                        ->label('Họ và tên')
+                        ->label(__('Họ và tên'))
                         ->required()
                         ->maxLength(255),
                     TextInput::make('email')
-                        ->label('Email')
+                        ->label(__('Email'))
                         ->email()
                         ->required()
                         ->maxLength(255)
                         ->unique(ignoreRecord: true),
                     TextInput::make('phone')
-                        ->label('Số điện thoại')
+                        ->label(__('Số điện thoại'))
                         ->tel()
                         ->maxLength(30),
                     TextInput::make('password')
-                        ->label('Mật khẩu')
+                        ->label(__('Mật khẩu'))
                         ->password()
                         ->revealable()
                         ->rules(fn (?User $record): array => $record ? ['nullable', Password::min(8)] : ['required', Password::min(8)])
                         ->dehydrated(fn (?string $state): bool => filled($state))
-                        ->helperText('Để trống khi sửa nếu không muốn đổi mật khẩu.'),
+                        ->helperText(__('Để trống khi sửa nếu không muốn đổi mật khẩu.')),
                     Select::make('role_id')
-                        ->label('Vai trò')
+                        ->label(__('Vai trò'))
                         ->options(fn () => Role::query()->orderBy('name')->pluck('name', 'id'))
                         ->searchable()
                         ->preload()
                         ->nullable(),
                     Toggle::make('is_locked')
-                        ->label('Khóa tài khoản')
+                        ->label(__('Khóa tài khoản'))
                         ->default(false),
                     DateTimePicker::make('email_verified_at')
-                        ->label('Email đã xác minh lúc'),
+                        ->label(__('Email đã xác minh lúc')),
                 ])
                 ->columns(2),
         ]);

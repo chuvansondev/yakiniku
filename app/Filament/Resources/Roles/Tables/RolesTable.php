@@ -23,11 +23,11 @@ class RolesTable
                     ->limit(50)
                     ->searchable(),
                 TextColumn::make('users_count')
-                    ->label('Users')
+                    ->label(__('Users'))
                     ->counts('users')
                     ->sortable(),
                 TextColumn::make('permissions_count')
-                    ->label('Permissions')
+                    ->label(__('Permissions'))
                     ->counts('permissions')
                     ->sortable(),
                 TextColumn::make('created_at')

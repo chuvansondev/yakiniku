@@ -23,7 +23,7 @@ class BannersTable
                 TextColumn::make('title')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('type')
+                TextColumn::make('type')->formatStateUsing(fn (?string $state): string => $state ? __($state) : '')
                     ->badge()
                     ->searchable()
                     ->sortable(),

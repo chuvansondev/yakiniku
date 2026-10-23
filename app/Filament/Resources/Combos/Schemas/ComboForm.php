@@ -19,7 +19,7 @@ class ComboForm
                     ->required(),
                 TextInput::make('slug')
                     ->nullable()
-                    ->helperText('Để trống để tự tạo từ tên combo.'),
+                    ->helperText(__('Để trống để tự tạo từ tên combo.')),
                 Textarea::make('description')
                     ->default(null)
                     ->columnSpanFull(),
@@ -29,11 +29,11 @@ class ComboForm
                     ->required()
                     ->numeric()
                     ->default(0.0)
-                    ->prefix('$'),
+                    ->suffix('VND'),
                 TextInput::make('original_price')
                     ->numeric()
                     ->default(null)
-                    ->prefix('$'),
+                    ->suffix('VND'),
                 DatePicker::make('start_date'),
                 DatePicker::make('end_date'),
                 Toggle::make('status')
@@ -41,7 +41,7 @@ class ComboForm
                 TextInput::make('sort_order')
                     ->numeric()
                     ->nullable()
-                    ->helperText('Để trống để tự tăng thứ tự.'),
+                    ->helperText(__('Để trống để tự tăng thứ tự.')),
             ]);
     }
 }

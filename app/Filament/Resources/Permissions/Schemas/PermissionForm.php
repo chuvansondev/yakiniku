@@ -20,7 +20,7 @@ class PermissionForm
                     ->nullable()
                     ->maxLength(255)
                     ->unique(ignoreRecord: true)
-                    ->helperText('Để trống để tự tạo từ tên quyền.'),
+                    ->helperText(__('Để trống để tự tạo từ tên quyền.')),
                 Textarea::make('description')
                     ->default(null)
                     ->maxLength(65535)

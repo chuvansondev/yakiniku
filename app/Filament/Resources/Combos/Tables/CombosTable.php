@@ -32,10 +32,10 @@ class CombosTable
                     ->sortable(),
                 ImageColumn::make('image'),
                 TextColumn::make('price')
-                    ->money()
+                    ->money('VND')
                     ->sortable(),
                 TextColumn::make('original_price')
-                    ->money()
+                    ->money('VND')
                     ->sortable(),
                 TextColumn::make('start_date')
                     ->date()

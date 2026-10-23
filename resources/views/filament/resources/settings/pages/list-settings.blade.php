@@ -23,7 +23,7 @@
 
         <div class="settings-save-bar">
             <x-filament::button type="submit" icon="heroicon-m-check">
-                Lưu thay đổi
+                {{ __('Lưu thay đổi') }}
             </x-filament::button>
         </div>
     </form>

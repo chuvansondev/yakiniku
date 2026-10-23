@@ -13,7 +13,7 @@ class LeadForm
     {
         return $schema
             ->components([
-                Select::make('customer_id')
+                Select::make('customer_id')->label(__('Customer'))
                     ->relationship('customer', 'name')
                     ->default(null),
                 TextInput::make('name')
@@ -22,7 +22,7 @@ class LeadForm
                     ->tel()
                     ->default(null),
                 TextInput::make('email')
-                    ->label('Email address')
+                    ->label(__('Email address'))
                     ->email()
                     ->default(null),
                 Textarea::make('message')

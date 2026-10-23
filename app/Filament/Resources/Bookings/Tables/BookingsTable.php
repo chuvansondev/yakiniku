@@ -19,16 +19,16 @@ class BookingsTable
                 ->orderByDesc('created_at')
                 ->orderByDesc('id'))
             ->columns([
-                TextColumn::make('user.name')
+                TextColumn::make('user.name')->label(__('User'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('booking_code')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('restaurant.name')
+                TextColumn::make('restaurant.name')->label(__('Restaurant'))
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('customer.name')
+                TextColumn::make('customer.name')->label(__('Customer'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('customer_name')
@@ -37,7 +37,7 @@ class BookingsTable
                 TextColumn::make('phone')
                     ->searchable(),
                 TextColumn::make('email')
-                    ->label('Email address')
+                    ->label(__('Email address'))
                     ->searchable(),
                 TextColumn::make('booking_date')
                     ->date()

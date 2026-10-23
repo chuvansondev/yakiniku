@@ -17,16 +17,16 @@ class MenuCategoryForm
                 TextInput::make('name')
                     ->required(),
                 TextInput::make('name_en')
-                    ->label('Name (English)'),
+                    ->label(__('Name (English)')),
                 TextInput::make('slug')
                     ->nullable()
                     ->maxLength(255)
-                    ->helperText('Để trống để tự tạo slug từ tên danh mục.'),
+                    ->helperText(__('Để trống để tự tạo slug từ tên danh mục.')),
                 Textarea::make('description')
                     ->default(null)
                     ->columnSpanFull(),
                 Textarea::make('description_en')
-                    ->label('Description (English)')
+                    ->label(__('Description (English)'))
                     ->default(null)
                     ->columnSpanFull(),
                 FileUpload::make('image')
@@ -34,7 +34,7 @@ class MenuCategoryForm
                 TextInput::make('sort_order')
                     ->numeric()
                     ->nullable()
-                    ->helperText('Để trống để tự tăng thứ tự.'),
+                    ->helperText(__('Để trống để tự tăng thứ tự.')),
                 Toggle::make('status')
                     ->required(),
             ]);

@@ -2,7 +2,6 @@
 
 namespace App\Filament\Pages;
 
-use App\Enums\AppLocale;
 use App\Enums\BookingStatus;
 use App\Enums\LeadStatus;
 use App\Models\Booking;
@@ -49,7 +48,7 @@ class Dashboard extends BaseDashboard
             return [
                 'date' => $date->toDateString(),
                 'label' => $date->format('d/m'),
-                'weekday' => $date->locale(AppLocale::Vietnamese->value)->isoFormat('dd'),
+                'weekday' => $date->locale(app()->getLocale())->isoFormat('dd'),
                 'count' => (int) $bookingCountsByDate->get($date->toDateString(), 0),
             ];
         });

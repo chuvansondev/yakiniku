@@ -15,10 +15,10 @@ class ComboItemsTable
     {
         return $table
             ->columns([
-                TextColumn::make('combo.name')
+                TextColumn::make('combo.name')->label(__('Combo'))
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('menuItem.name')
+                TextColumn::make('menuItem.name')->label(__('Menu item'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('quantity')

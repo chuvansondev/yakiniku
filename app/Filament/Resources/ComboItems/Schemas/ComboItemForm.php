@@ -12,10 +12,10 @@ class ComboItemForm
     {
         return $schema
             ->components([
-                Select::make('combo_id')
+                Select::make('combo_id')->label(__('Combo'))
                     ->relationship('combo', 'name')
                     ->required(),
-                Select::make('menu_item_id')
+                Select::make('menu_item_id')->label(__('Menu item'))
                     ->relationship('menuItem', 'name')
                     ->required(),
                 TextInput::make('quantity')

@@ -21,11 +21,11 @@ class RoleForm
                     ->nullable()
                     ->maxLength(255)
                     ->unique(ignoreRecord: true)
-                    ->helperText('Để trống để tự tạo từ tên vai trò.'),
+                    ->helperText(__('Để trống để tự tạo từ tên vai trò.')),
                 Textarea::make('description')
                     ->columnSpanFull(),
                 CheckboxList::make('permissions')
-                    ->label('Quyền được cấp')
+                    ->label(__('Quyền được cấp'))
                     ->relationship(titleAttribute: 'name')
                     ->searchable()
                     ->columns(2)

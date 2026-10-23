@@ -15,14 +15,14 @@ class CustomersTable
     {
         return $table
             ->columns([
-                TextColumn::make('user.name')
+                TextColumn::make('user.name')->label(__('User'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('email')
-                    ->label('Email address')
+                    ->label(__('Email address'))
                     ->searchable(),
                 TextColumn::make('email_normalized')
                     ->searchable()
@@ -31,12 +31,12 @@ class CustomersTable
                     ->searchable(),
                 TextColumn::make('phone_normalized')
                     ->searchable(),
-                TextColumn::make('source')
+                TextColumn::make('source')->formatStateUsing(fn (?string $state): string => $state ? __($state) : '')
                     ->searchable(),
                 TextColumn::make('last_contact_at')
                     ->dateTime()
                     ->sortable(),
-                TextColumn::make('status')
+                TextColumn::make('status')->formatStateUsing(fn (?string $state): string => $state ? __($state) : '')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('created_at')
