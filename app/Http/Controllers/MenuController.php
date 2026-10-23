@@ -7,8 +7,8 @@ use App\Models\MenuItem;
 use App\Models\Combo;
 use App\Models\Promotion;
 use App\Models\KidItem;
-use App\Enums\KidsFoodCategory;
-use App\Enums\KidsItemType;
+use App\Enums\KidFoodCategory;
+use App\Enums\KidItemType;
 use App\Services\PublicDataCache;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -40,7 +40,7 @@ class MenuController extends Controller
 
         $combos->each(fn (Combo $combo) => $combo->setAttribute('menu_image_url', $this->imageUrl($combo->image)));
 
-        return view('menu.combos', compact('combos'));
+        return view('frontend.menu.combos', compact('combos'));
     }
 
     public function promotions(): View
@@ -55,13 +55,13 @@ class MenuController extends Controller
 
         $promotions->each(fn (Promotion $promotion) => $promotion->setAttribute('menu_image_url', $this->imageUrl($promotion->image)));
 
-        return view('menu.promotions', compact('promotions'));
+        return view('frontend.menu.promotions', compact('promotions'));
     }
 
-    public function forKids(Request $request): View
+    public function kids(Request $request): View
     {
-        $types = collect(KidsItemType::cases())->mapWithKeys(fn (KidsItemType $type) => [$type->value => $type->value]);
-        $categories = collect(KidsFoodCategory::cases())->mapWithKeys(fn (KidsFoodCategory $category) => [$category->value => $category->value]);
+        $types = collect(KidItemType::cases())->mapWithKeys(fn (KidItemType $type) => [$type->value => $type->value]);
+        $categories = collect(KidFoodCategory::cases())->mapWithKeys(fn (KidFoodCategory $category) => [$category->value => $category->value]);
         $selectedType = $request->query('type');
         $selectedCategory = $request->query('category');
 
@@ -83,19 +83,19 @@ class MenuController extends Controller
         $items->each(fn (KidItem $item) => $item->setAttribute('menu_image_url', $this->imageUrl($item->image)));
 
         $typeLabels = [
-            KidsItemType::Food->value => $request->getLocale() === 'en' ? 'Food' : 'Món ăn',
-            KidsItemType::Utensil->value => $request->getLocale() === 'en' ? 'Utensils' : 'Dụng cụ',
+            KidItemType::Food->value => $request->getLocale() === 'en' ? 'Food' : 'Món ăn',
+            KidItemType::Utensil->value => $request->getLocale() === 'en' ? 'Utensils' : 'Dụng cụ',
         ];
         $categoryLabels = [
-            KidsFoodCategory::Meat->value => $request->getLocale() === 'en' ? 'Meat' : 'Thịt',
-            KidsFoodCategory::SideDish->value => $request->getLocale() === 'en' ? 'Side dishes' : 'Món ăn kèm',
-            KidsFoodCategory::Vegetable->value => $request->getLocale() === 'en' ? 'Vegetables' : 'Rau củ',
-            KidsFoodCategory::Soup->value => $request->getLocale() === 'en' ? 'Soup' : 'Súp',
-            KidsFoodCategory::RiceNoodles->value => $request->getLocale() === 'en' ? 'Rice & noodles' : 'Cơm và mì',
-            KidsFoodCategory::Dessert->value => $request->getLocale() === 'en' ? 'Desserts' : 'Tráng miệng',
+            KidFoodCategory::Meat->value => $request->getLocale() === 'en' ? 'Meat' : 'Thịt',
+            KidFoodCategory::SideDish->value => $request->getLocale() === 'en' ? 'Side dishes' : 'Món ăn kèm',
+            KidFoodCategory::Vegetable->value => $request->getLocale() === 'en' ? 'Vegetables' : 'Rau củ',
+            KidFoodCategory::Soup->value => $request->getLocale() === 'en' ? 'Soup' : 'Súp',
+            KidFoodCategory::RiceNoodles->value => $request->getLocale() === 'en' ? 'Rice & noodles' : 'Cơm và mì',
+            KidFoodCategory::Dessert->value => $request->getLocale() === 'en' ? 'Desserts' : 'Tráng miệng',
         ];
 
-        return view('menu.for-kid', compact('items', 'typeLabels', 'categoryLabels', 'selectedType', 'selectedCategory'));
+        return view('frontend.menu.for-kids', compact('items', 'typeLabels', 'categoryLabels', 'selectedType', 'selectedCategory'));
     }
 
     private function renderMenu(bool $mustTryOnly): View
@@ -117,7 +117,7 @@ class MenuController extends Controller
             $category->setAttribute('menu_image_url', $this->imageUrl($category->image));
         });
 
-        return view('menu.index', compact('categories', 'mustTryOnly'));
+        return view('frontend.menu.index', compact('categories', 'mustTryOnly'));
     }
 
     private function imageUrl(?string $path): ?string

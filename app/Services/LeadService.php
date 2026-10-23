@@ -4,11 +4,11 @@ namespace App\Services;
 
 use App\Enums\LeadStatus;
 use App\Models\Lead;
-use App\Contracts\Repositories\LeadRepositoryInterface;
+use App\Repositories\Contracts\LeadRepositoryContract;
 
 class LeadService
 {
-    public function __construct(private readonly LeadRepositoryInterface $leads, private readonly CustomerService $customers) {}
+    public function __construct(private readonly LeadRepositoryContract $leads, private readonly CustomerService $customers) {}
 
     public function register(array $attributes): Lead
     {

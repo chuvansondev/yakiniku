@@ -20,7 +20,7 @@ class BookingForm
                     ->label('Booking code')
                     ->disabled()
                     ->dehydrated(false)
-                    ->placeholder('Automatically generated when saved'),
+                    ->placeholder(__('Automatically generated when saved')),
                 Select::make('restaurant_id')
                     ->relationship('restaurant', 'name')
                     ->required(),

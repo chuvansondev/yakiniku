@@ -2,13 +2,13 @@
 
 namespace App\Repositories;
 
-use App\Contracts\Repositories\AdminResourceRepositoryInterface;
+use App\Repositories\Contracts\AdminResourceRepositoryContract;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
-class AdminResourceRepository implements AdminResourceRepositoryInterface
+class AdminResourceRepository implements AdminResourceRepositoryContract
 {
     public function all(string $modelClass, array $with = [], array $orderBy = [], array $filters = [], ?int $limit = null): \Illuminate\Database\Eloquent\Collection
     {

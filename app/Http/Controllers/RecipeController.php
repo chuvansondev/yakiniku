@@ -22,7 +22,7 @@ class RecipeController extends Controller
 
         $recipes->each(fn (Recipe $recipe) => $recipe->setAttribute('menu_image_url', $this->imageUrl($recipe->image)));
 
-        return view('recipes.index', compact('recipes'));
+        return view('frontend.recipes.index', compact('recipes'));
     }
 
     private function imageUrl(?string $path): ?string

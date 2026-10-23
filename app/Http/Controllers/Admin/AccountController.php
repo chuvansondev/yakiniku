@@ -33,15 +33,6 @@ class AccountController extends Controller
         return view('admin.accounts.index', compact('accounts'));
     }
 
-    public function show(Request $request, User $account)
-    {
-        if ($request->expectsJson() || $request->is('api/*')) {
-            return response()->json(['success' => true, 'data' => $account->load('role:id,name')->only(['id', 'name', 'email', 'role_id', 'is_locked', 'created_at'])]);
-        }
-
-        abort(404);
-    }
-
     public function create()
     {
         return view('admin.accounts.create', ['roles' => Role::query()->orderBy('name')->get(['id', 'name'])]);
@@ -63,54 +54,6 @@ class AccountController extends Controller
         }
 
         return redirect()->route('admin.accounts.index')->with('success', __('accounts.messages.created'));
-    }
-
-    public function edit(User $account)
-    {
-        return view('admin.accounts.edit', [
-            'account' => $account,
-            'roles' => Role::query()->orderBy('name')->get(['id', 'name']),
-        ]);
-    }
-
-    public function update(Request $request, User $account)
-    {
-        $data = $this->validatedData($request, $account);
-        if (blank($data['password'] ?? null)) {
-            unset($data['password']);
-        }
-
-        $account->fill([...$data, 'update_by' => $request->user()->id]);
-        if (array_key_exists('password', $data)) {
-            $account->remember_token = Str::random(60);
-            $account->session_version++;
-        }
-        $account->save();
-
-        if ($request->expectsJson() || $request->is('api/*')) {
-            return $this->respond($request, $account, __('accounts.messages.updated'));
-        }
-
-        return redirect()->route('admin.accounts.index')->with('success', __('accounts.messages.updated'));
-    }
-
-    public function toggleLock(Request $request, User $account)
-    {
-        abort_if($account->is($request->user()), 422, __('accounts.messages.cannot_lock_self'));
-
-        $account->is_locked = ! $account->is_locked;
-        $account->session_version++;
-        if ($account->is_locked) {
-            $account->remember_token = Str::random(60);
-        }
-        $account->update_by = $request->user()->id;
-        $account->save();
-
-        $message = $account->is_locked ? __('accounts.messages.locked') : __('accounts.messages.unlocked');
-
-        return ($request->expectsJson() || $request->is('api/*'))
-            ? $this->respond($request, $account, $message)
-            : redirect()->route('admin.accounts.index')->with('success', $message);
     }
 
     private function validatedData(Request $request, ?User $account = null): array

@@ -20,27 +20,34 @@ class RestaurantsTable
     {
         return $table
             ->columns([
-                TextColumn::make('name')
+                TextColumn::make('name')->wrap()
                     ->searchable(),
                 TextColumn::make('address')
+                    ->label(app()->getLocale() === 'en' ? 'Address' : 'Địa chỉ')
+                    ->wrap()
+                    ->extraCellAttributes(['style' => 'min-width: 200px; max-width: 320px;'])
                     ->searchable(),
                 TextColumn::make('phone')
                     ->searchable(),
-                TextColumn::make('latitude')
+                TextColumn::make('latitude')->toggleable(isToggledHiddenByDefault: true)
                     ->numeric()
                     ->sortable(),
-                TextColumn::make('longitude')
+                TextColumn::make('longitude')->toggleable(isToggledHiddenByDefault: true)
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('google_map_url')
+                    ->label(app()->getLocale() === 'en' ? 'Map' : 'Bản đồ')
+                    ->formatStateUsing(fn (): string => app()->getLocale() === 'en' ? 'View map' : 'Xem bản đồ')
+                    ->url(fn ($record): ?string => $record->google_map_url)
+                    ->openUrlInNewTab()
                     ->searchable(),
-                TextColumn::make('opening_time')
-                    ->time()
+                TextColumn::make('opening_time')->label(app()->getLocale() === 'en' ? 'Opens' : 'Giờ mở')
+                    ->time('H:i')
                     ->sortable(),
-                TextColumn::make('closing_time')
-                    ->time()
+                TextColumn::make('closing_time')->label(app()->getLocale() === 'en' ? 'Closes' : 'Giờ đóng')
+                    ->time('H:i')
                     ->sortable(),
-                ImageColumn::make('image'),
+                ImageColumn::make('image')->toggleable(isToggledHiddenByDefault: true),
                 IconColumn::make('status')
                     ->boolean(),
                 TextColumn::make('created_at')

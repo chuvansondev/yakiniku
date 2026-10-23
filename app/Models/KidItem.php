@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Database\Factories\KidsItemFactory;
+use Database\Factories\KidItemFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -12,7 +12,7 @@ use App\Models\Concerns\GeneratesSortOrder;
 
 class KidItem extends Model
 {
-    /** @use HasFactory<KidsItemFactory> */
+    /** @use HasFactory<KidItemFactory> */
     use HasFactory;
     use SoftDeletes, TracksDeletion;
     use GeneratesSlug, GeneratesSortOrder;

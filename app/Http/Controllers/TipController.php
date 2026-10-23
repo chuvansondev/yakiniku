@@ -22,7 +22,7 @@ class TipController extends Controller
 
         $tips->each(fn (Tip $tip) => $tip->setAttribute('page_image_url', $this->imageUrl($tip->image)));
 
-        return view('tips.index', compact('tips'));
+        return view('frontend.tips.index', compact('tips'));
     }
 
     private function imageUrl(?string $path): ?string

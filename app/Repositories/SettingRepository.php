@@ -2,12 +2,11 @@
 
 namespace App\Repositories;
 
-use App\Contracts\Repositories\SettingRepositoryInterface;
 use App\Models\Setting;
 use App\Repositories\Contracts\SettingRepositoryContract;
 use Illuminate\Support\Collection;
 
-class SettingRepository extends EloquentRepository implements SettingRepositoryContract, SettingRepositoryInterface
+class SettingRepository extends EloquentRepository implements SettingRepositoryContract
 {
     protected function modelClass(): string
     {

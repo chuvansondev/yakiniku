@@ -3,10 +3,9 @@
 namespace App\Repositories;
 
 use App\Models\Lead;
-use App\Contracts\Repositories\LeadRepositoryInterface;
 use App\Repositories\Contracts\LeadRepositoryContract;
 
-class LeadRepository extends EloquentRepository implements LeadRepositoryContract, LeadRepositoryInterface
+class LeadRepository extends EloquentRepository implements LeadRepositoryContract
 {
     protected function modelClass(): string
     {

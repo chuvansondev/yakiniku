@@ -54,7 +54,7 @@ Route::get('/menu/our-menu', MenuController::class)->name('menu.our-menu');
 Route::get('/menu/must-try', [MenuController::class, 'mustTry'])->name('menu.must-try');
 Route::get('/menu/combo', [MenuController::class, 'combos'])->name('menu.combos');
 Route::get('/menu/promotions', [MenuController::class, 'promotions'])->name('menu.promotions');
-Route::get('/menu/for-kid', [MenuController::class, 'forKids'])->name('menu.for-kid');
+Route::get('/menu/for-kid', [MenuController::class, 'kids'])->name('menu.for-kids');
 Route::get('/our-secret/recipes', [RecipeController::class, 'index'])->name('secret.recipes');
 Route::get('/our-secret/tips', [TipController::class, 'index'])->name('secret.tips');
 Route::get('/about', [AboutController::class, 'index'])->name('about');

@@ -208,8 +208,8 @@
                                     $child['url'] = route('menu.promotions');
                                 }
 
-                                if ($link['key'] === 'header_menu_label' && in_array($childLabel, ['dành cho trẻ con', 'for kids', 'for kid'], true) && \Illuminate\Support\Facades\Route::has('menu.for-kid')) {
-                                    $child['url'] = route('menu.for-kid');
+                                if ($link['key'] === 'header_menu_label' && in_array($childLabel, ['dành cho trẻ con', 'for kids', 'for kid'], true) && \Illuminate\Support\Facades\Route::has('menu.for-kids')) {
+                                    $child['url'] = route('menu.for-kids');
                                 }
 
                                 if (in_array($childLabel, ['công thức', 'recipes', 'recipe'], true) && \Illuminate\Support\Facades\Route::has('secret.recipes')) {

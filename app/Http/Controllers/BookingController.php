@@ -31,40 +31,6 @@ class BookingController extends Controller
         return view('frontend.bookings.index', compact('bookings'));
     }
 
-    public function lookup(Request $request): View|RedirectResponse
-    {
-        if ($request->isMethod('post')) {
-            $data = $request->validate([
-                'booking_code' => ['required', 'string', 'max:32'],
-                'contact' => ['required', 'string', 'max:255'],
-            ]);
-
-            $booking = Booking::query()->with('restaurant')
-                ->where('booking_code', strtoupper(trim($data['booking_code'])))
-                ->where(fn ($query) => $query->where('email', $data['contact'])->orWhere('phone', $data['contact']))
-                ->first();
-
-            if (! $booking) {
-                return back()->withInput()->withErrors(['booking_code' => __('Không tìm thấy đặt bàn. Vui lòng kiểm tra mã đặt bàn và email hoặc số điện thoại đã dùng khi đặt.')]);
-            }
-
-            $request->session()->put('looked_up_booking_id', $booking->id);
-
-            return to_route('booking.lookup.result');
-        }
-
-        return view('frontend.bookings.lookup', ['booking' => null]);
-    }
-
-    public function lookupResult(Request $request): View
-    {
-        $bookingId = $request->session()->get('looked_up_booking_id');
-        abort_if(! $bookingId, 404);
-        $booking = Booking::query()->with('restaurant')->findOrFail($bookingId);
-
-        return view('frontend.bookings.lookup', compact('booking'));
-    }
-
     public function cancelManaged(Request $request, BookingService $bookingService, SettingService $settings, Booking $booking): RedirectResponse
     {
         abort_unless($booking->user_id === $request->user()->id, 404);

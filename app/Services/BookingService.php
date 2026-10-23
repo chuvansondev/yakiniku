@@ -6,7 +6,7 @@ use App\Enums\BookingStatus;
 use App\Models\Booking;
 use App\Models\Restaurant;
 use App\Models\Customer;
-use App\Contracts\Repositories\BookingRepositoryInterface;
+use App\Repositories\Contracts\BookingRepositoryContract;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\DB;
 
 class BookingService
 {
-    public function __construct(private readonly BookingRepositoryInterface $bookings) {}
+    public function __construct(private readonly BookingRepositoryContract $bookings) {}
 
     public function tablesForRestaurant(?int $restaurantId, bool $activeOnly = true): Collection
     {

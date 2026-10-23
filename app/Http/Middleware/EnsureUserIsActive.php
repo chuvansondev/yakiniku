@@ -26,7 +26,7 @@ class EnsureUserIsActive
                 ], 401);
             }
 
-            return redirect()->route($isAdmin ? 'admin.login' : 'login')
+            return redirect()->route($isAdmin ? 'filament.admin.auth.login' : 'login')
                 ->withErrors(['email' => __('This account is locked or its session has expired.')]);
         }
 

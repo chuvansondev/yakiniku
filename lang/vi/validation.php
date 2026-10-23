@@ -2,6 +2,13 @@
 
 return [
     'accepted' => ':attribute phải được chấp nhận.',
+    'after_or_equal' => ':attribute phải là ngày :date hoặc sau đó.',
+    'between' => [
+        'array' => ':attribute phải có từ :min đến :max mục.',
+        'file' => ':attribute phải có dung lượng từ :min đến :max kilobyte.',
+        'numeric' => ':attribute phải từ :min đến :max.',
+        'string' => ':attribute phải có từ :min đến :max ký tự.',
+    ],
     'array' => ':attribute phải là một danh sách.',
     'boolean' => ':attribute phải là đúng hoặc sai.',
     'confirmed' => ':attribute xác nhận không khớp.',
@@ -30,6 +37,11 @@ return [
     'string' => ':attribute phải là chuỗi ký tự.',
     'unique' => ':attribute đã được sử dụng.',
     'url' => ':attribute phải là đường dẫn hợp lệ.',
+    'custom' => [
+        'terms_accepted' => [
+            'accepted' => 'Vui lòng đọc và đồng ý với điều khoản đặt bàn.',
+        ],
+    ],
     'attributes' => [
         'booking_date' => 'ngày đặt bàn',
         'booking_time' => 'giờ đặt bàn',
@@ -41,5 +53,7 @@ return [
         'phone' => 'số điện thoại',
         'restaurant_id' => 'nhà hàng',
         'table_codes' => 'bàn',
+        'table_codes.*' => 'bàn đã chọn',
+        'terms_accepted' => 'điều khoản đặt bàn',
     ],
 ];

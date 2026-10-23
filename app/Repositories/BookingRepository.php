@@ -6,13 +6,12 @@ use App\Models\Booking;
 use App\Models\MenuItem;
 use App\Models\Restaurant;
 use App\Enums\BookingStatus;
-use App\Contracts\Repositories\BookingRepositoryInterface;
 use App\Repositories\Contracts\BookingRepositoryContract;
 use App\Repositories\Contracts\BookingStatusHistoryRepositoryContract;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
-class BookingRepository extends EloquentRepository implements BookingRepositoryContract, BookingRepositoryInterface
+class BookingRepository extends EloquentRepository implements BookingRepositoryContract
 {
     protected function modelClass(): string
     {

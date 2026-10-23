@@ -28,7 +28,7 @@ class AboutController extends Controller
             $restaurant->setAttribute('page_map_embed_url', 'https://www.google.com/maps?q='.urlencode($mapQuery).'&output=embed');
         });
 
-        return view('about.index', compact('restaurants'));
+        return view('frontend.about.index', compact('restaurants'));
     }
 
     private function imageUrl(?string $path): ?string

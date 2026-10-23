@@ -55,6 +55,6 @@ class HomeController extends Controller
         });
         $restaurants = clone PublicDataCache::remember(PublicDataCache::RESTAURANTS, 'active', fn () => Restaurant::query()->where('status', true)->orderBy('name')->get());
 
-        return view('home.index', compact('banners', 'categories', 'restaurants'));
+        return view('frontend.home.index', compact('banners', 'categories', 'restaurants'));
     }
 }

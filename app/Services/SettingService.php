@@ -3,13 +3,13 @@
 namespace App\Services;
 
 use App\Enums\AppLocale;
-use App\Contracts\Repositories\SettingRepositoryInterface;
+use App\Repositories\Contracts\SettingRepositoryContract;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
 class SettingService
 {
-    public function __construct(private readonly SettingRepositoryInterface $settings) {}
+    public function __construct(private readonly SettingRepositoryContract $settings) {}
 
     public function get(string $key, mixed $default = null): mixed
     {

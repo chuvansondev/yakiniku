@@ -19,7 +19,7 @@ class TipForm
                     ->required(),
                 TextInput::make('slug')
                     ->nullable()
-                    ->helperText('Để trống để tự tạo từ tiêu đề.'),
+                    ->helperText(__('Leave blank to generate it from the title.')),
                 TextInput::make('short_description')
                     ->default(null),
                 Textarea::make('content')

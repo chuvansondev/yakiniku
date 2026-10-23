@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Contracts\Repositories\AdminResourceRepositoryInterface;
+use App\Repositories\Contracts\AdminResourceRepositoryContract;
 use App\Jobs\DeletePublicFile;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 
 class AdminResourceService
 {
-    public function __construct(private readonly AdminResourceRepositoryInterface $resources) {}
+    public function __construct(private readonly AdminResourceRepositoryContract $resources) {}
 
     public function all(string $modelClass, array $with = [], array $orderBy = [], array $filters = [], ?int $limit = null): Collection
     {

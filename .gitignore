@@ -1,8 +1,9 @@
 *.log
 .DS_Store
 .env
-.env.backup
-.env.production
+.env.*
+!.env.example
+!.env.*.example
 .phpactor.json
 .phpunit.result.cache
 /.fleet
@@ -25,3 +26,22 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Generated test reports
+/coverage/
+/.coverage/
+/build/coverage/
+/junit.xml
+/phpunit-result.xml
+
+# Laravel cache and runtime files
+/bootstrap/cache/*
+!/bootstrap/cache/.gitignore
+/storage/**
+!/storage/**/
+!/storage/**/.gitignore
+
+# Generated Laravel development helpers
+/_ide_helper.php
+/_ide_helper_models.php
+/.phpstorm.meta.php
