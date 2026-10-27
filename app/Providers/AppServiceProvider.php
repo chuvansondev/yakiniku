@@ -66,8 +66,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Vercel terminates TLS before forwarding requests to the PHP runtime.
-        if (env('VERCEL')) {
+        // Production TLS terminates at the proxy before reaching PHP.
+        if ($this->app->environment('production') || env('VERCEL')) {
             URL::forceScheme('https');
         }
 
