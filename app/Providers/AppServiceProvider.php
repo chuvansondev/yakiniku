@@ -17,6 +17,7 @@ use App\Models\Tip;
 use App\Observers\PublicDataCacheObserver;
 use App\Policies\UserPolicy;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Filament\Forms\Components\Field;
 use Filament\Tables\Columns\Column;
@@ -65,6 +66,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Vercel terminates TLS before forwarding requests to the PHP runtime.
+        if (env('VERCEL')) {
+            URL::forceScheme('https');
+        }
+
         foreach ([Banner::class, Combo::class, ComboItem::class, KidItem::class, MenuCategory::class, MenuItem::class, Promotion::class, Recipe::class, Restaurant::class, Setting::class, Tip::class] as $model) {
             $model::observe(PublicDataCacheObserver::class);
         }
