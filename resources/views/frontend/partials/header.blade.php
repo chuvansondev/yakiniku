@@ -92,6 +92,7 @@
     .site-header__locale button.is-active { background: #a42127; color: #fff; }
     .site-header__toggle { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; clip-path: inset(50%); }
     .site-header__toggle-label { display: none; width: 42px; height: 42px; align-items: center; justify-content: center; border: 1px solid rgba(73, 59, 53, .24); border-radius: 3px; cursor: pointer; }
+    .site-header__toggle:focus-visible ~ .site-header__controls .site-header__toggle-label { outline: 2px solid #a42127; outline-offset: 3px; }
     .site-header__toggle-label span, .site-header__toggle-label span::before, .site-header__toggle-label span::after { position: relative; display: block; width: 19px; height: 2px; background: #493b35; content: ''; }
     .site-header__toggle-label span::before { position: absolute; top: -6px; }
     .site-header__toggle-label span::after { position: absolute; top: 6px; }
@@ -103,7 +104,7 @@
         .site-header__toggle-label { display: inline-flex; }
         .site-header__nav { display: none; grid-column: 1 / -1; grid-row: 2; align-items: stretch; padding: 0 0 14px; }
         .site-header__toggle:checked ~ .site-header__nav { display: flex; flex-direction: column; gap: 2px; }
-        .site-header__link { padding: 11px 8px; }
+        .site-header__link { display: block; padding: 11px 8px; }
         .site-header__link::after { display: none; }
         .site-header__item { width: 100%; }
         .site-header__submenu { position: static; display: block; min-width: 0; padding: 0 0 4px 14px; border: 0; border-radius: 0; box-shadow: none; transform: none; }
@@ -161,6 +162,8 @@
             @endif
         </a>
 
+        <input class="site-header__toggle" type="checkbox" id="siteHeaderToggle" aria-label="{{ app()->getLocale() === 'vi' ? 'Mở menu' : 'Open menu' }}">
+
         <div class="site-header__controls">
             <div class="site-header__account">
                 @auth
@@ -187,7 +190,6 @@
                 <button type="submit" name="locale" value="vi" lang="vi" class="{{ app()->getLocale() === 'vi' ? 'is-active' : '' }}" aria-pressed="{{ app()->getLocale() === 'vi' ? 'true' : 'false' }}">VIE</button>
                 <button type="submit" name="locale" value="en" lang="en" class="{{ app()->getLocale() === 'en' ? 'is-active' : '' }}" aria-pressed="{{ app()->getLocale() === 'en' ? 'true' : 'false' }}">ENG</button>
             </form>
-            <input class="site-header__toggle" type="checkbox" id="siteHeaderToggle" aria-label="{{ app()->getLocale() === 'vi' ? 'Mở menu' : 'Open menu' }}">
             <label class="site-header__toggle-label" for="siteHeaderToggle" aria-hidden="true"><span></span></label>
         </div>
 
