@@ -57,7 +57,7 @@ class UserResource extends Resource
 
     public static function canDeleteAny(): bool
     {
-        return false;
+        return (bool) auth()->user()?->is_admin;
     }
 
     public static function form(Schema $schema): Schema

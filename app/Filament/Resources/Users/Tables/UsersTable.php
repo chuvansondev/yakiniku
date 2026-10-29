@@ -2,6 +2,10 @@
 
 namespace App\Filament\Resources\Users\Tables;
 
+use App\Filament\Resources\Users\UserResource;
+use App\Models\User;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -28,6 +32,11 @@ class UsersTable
             ->recordActions([
                 EditAction::make(),
             ])
-            ->toolbarActions([]);
+            ->checkIfRecordIsSelectableUsing(fn (User $record): bool => UserResource::canDelete($record))
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make()->authorizeIndividualRecords('delete'),
+                ]),
+            ]);
     }
 }

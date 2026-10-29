@@ -33,6 +33,6 @@ class UserPolicy
 
     public function deleteAny(User $actor): bool
     {
-        return false;
+        return (bool) $actor->is_admin;
     }
 }
