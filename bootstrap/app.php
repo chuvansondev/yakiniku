@@ -23,7 +23,7 @@ return Application::configure(basePath: dirname(__DIR__))
             );
         }
 
-        $middleware->web(append: [SetLocale::class]);
+        $middleware->web(append: [SetLocale::class, \App\Http\Middleware\EnsureCustomerEmailIsVerified::class]);
         $middleware->alias([
             'active' => EnsureUserIsActive::class,
             'admin' => EnsureUserIsAdmin::class,

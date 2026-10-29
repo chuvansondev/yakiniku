@@ -45,7 +45,7 @@ class AuthController extends Controller
 
         $request->session()->forget('url.intended');
 
-        return redirect()->route('home');
+        return redirect()->route($user->hasVerifiedEmail() ? 'home' : 'verification.notice');
     }
 
     public function showRegister()
@@ -75,7 +75,9 @@ class AuthController extends Controller
         $request->session()->regenerate();
         $request->session()->put('auth_session_version', $user->session_version);
 
-        return redirect()->intended(route('booking.mine'));
+        $request->session()->forget('url.intended');
+
+        return redirect()->route('verification.notice');
     }
 
     public function logout(Request $request)
